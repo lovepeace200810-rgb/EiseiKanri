@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>衛生管理者 過去問演習マスター</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --success: #27ae60;
+            --error: #c0392b;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 { text-align: center; color: var(--primary); margin-top: 0; }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .score-box span { color: var(--accent); font-size: 1.2em; }
+        .combo-box { color: var(--success); }
+
+        /* Screens */
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.3s; }
+
+        /* Menu */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .category-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .category-btn:hover { transform: translateY(-2px); background: #34495e; }
+        .category-btn small { font-size: 0.8em; opacity: 0.8; margin-top: 5px; }
+
+        /* Question */
+        .question-meta {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .question-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-weight: bold;
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+        }
+        .options-grid { display: grid; gap: 10px; }
+        .option-btn {
+            background: white;
+            border: 2px solid #bdc3c7;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .option-btn:hover { border-color: var(--accent); background: #f0f8ff; }
+
+        /* Feedback */
+        .feedback-area {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .feedback-correct { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .feedback-wrong { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .explanation { margin-top: 10px; font-size: 0.95em; line-height: 1.5; }
+        
+        .next-btn, .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .menu-btn { background: #95a5a6; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .option-btn { padding: 12px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="stats-bar">
+        <div class="score-box">スコア: <span id="scoreDisplay">0</span></div>
+        <div class="combo-box" id="comboDisplay">Combo: 0</div>
+    </div>
+
+    <div id="menuScreen" class="screen active">
+        <h2>学習メニュー</h2>
+        <p style="text-align:center; color:#666;">収録問題数: <span id="totalCount">0</span> 問</p>
+        <div class="category-grid" id="categoryContainer">
+            </div>
+        <button class="category-btn" style="width:100%; margin-top:15px; background:var(--accent); flex-direction:row;" onclick="startQuiz('all')">
+            <strong>全範囲から出題</strong>
+        </button>
+    </div>
+
+    <div id="quizScreen" class="screen">
+        <div class="question-meta">
+            <span id="qCategory">単元名</span>
+            <span id="qProgress"></span>
+        </div>
+        <div class="question-text" id="questionText">問題文</div>
+        <div class="options-grid" id="optionsContainer">
+            </div>
+
+        <div id="feedbackArea" class="feedback-area">
+            <h3 id="resultTitle" style="margin-top:0;"></h3>
+            <p id="bonusMsg" style="font-weight:bold; color:var(--success);"></p>
+            <div class="explanation">
+                <strong>【解説】</strong><br>
+                <span id="explanationText"></span>
+            </div>
+            <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+            <button class="menu-btn" onclick="showMenu()">メニューに戻る</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ================================================================
+      ★データ管理エリア★
+      ここに新しいデータブロック（変数）を追加していってください。
+     ================================================================
+    */
+
+    // 【Batch 1】 サンプル問題（5問）
+    const batch1_sample = [
+        { id: 1, category: "労働基準法", text: "労働基準法において、解雇予告手当を支払わずに即時解雇できる場合として、所轄労働基準監督署長の認定を受ける必要がないものはどれか。", options: ["天災事変その他やむを得ない事由のために事業の継続が不可能となった場合", "労働者の責に帰すべき事由に基づいて解雇する場合", "試用期間中の者を雇い入れの日から14日以内に解雇する場合", "期間の定めのある労働契約において、その期間が満了して契約を更新しない場合"], answer: 2, explanation: "「試用期間中の者を雇い入れの日から14日以内に解雇する場合」は、解雇予告および解雇予告手当の支払いは不要であり、除外認定を受ける必要もありません。" },
+        { id: 2, category: "労働安全衛生法", text: "常時50人以上の労働者を使用する事業場において、選任が義務付けられていないものはどれか。", options: ["産業医", "衛生管理者", "安全管理者（業種による）", "作業主任者（該当作業がない場合）", "総括安全衛生管理者"], answer: 4, explanation: "総括安全衛生管理者の選任が必要なのは、林業・鉱業・建設業等は常時100人以上、製造業等は常時300人以上、その他の業種は常時1000人以上です。" },
+        { id: 3, category: "労働衛生", text: "ＷＢＧＴ（暑さ指数）の算出式として、屋内の場合で正しいものはどれか。", options: ["0.7 × 自然湿球温度 ＋ 0.3 × 黒球温度", "0.7 × 自然湿球温度 ＋ 0.2 × 黒球温度 ＋ 0.1 × 乾球温度", "0.1 × 自然湿球温度 ＋ 0.9 × 黒球温度", "0.5 × 自然湿球温度 ＋ 0.5 × 乾球温度"], answer: 0, explanation: "屋内の場合（または屋外で太陽照射がない場合）のWBGTは、「0.7 × 自然湿球温度 ＋ 0.3 × 黒球温度」で算出します。" },
+        { id: 4, category: "労働生理", text: "血液循環に関する記述として、誤っているものはどれか。", options: ["心臓の右心室から肺動脈へ血液が送り出される循環を肺循環という。", "左心室から大動脈へ血液が送り出される循環を体循環という。", "肺静脈には、酸素を多く含んだ動脈血が流れている。", "門脈は、消化管から吸収した栄養分を心臓へ直接運ぶ血管である。"], answer: 3, explanation: "門脈は、胃や腸などの腹部臓器から集まった血液を「肝臓」へ送る血管です。心臓へ直接戻るわけではありません。" },
+        { id: 5, category: "関係法令", text: "年次有給休暇に関する記述のうち、法令上誤っているものはどれか。", options: ["比例付与の対象となる労働者の週所定労働時間は30時間未満である。", "管理監督者であっても、年次有給休暇は付与しなければならない。", "年次有給休暇の請求権は、これを付与された日から1年間行使しないときは時効により消滅する。", "使用者は、年次有給休暇を労働者の請求する時季に与えなければならないが、事業の正常な運営を妨げる場合は他の時季に変更できる。"], answer: 2, explanation: "年次有給休暇の請求権の時効は「2年」です。（労働基準法第115条）" }
+    ];
+
+    // 【Batch 2】 労働生理・関係法令重点編（前回生成分）
+    const batch2_physiology = [
+        { id: 101, category: "労働生理", text: "心臓および血液循環に関する記述として、誤っているものはどれか。", options: ["心臓は、自律神経の支配を受けているが、不随意筋である。", "肺循環とは、右心室から肺動脈を経て肺に至り、肺静脈を通って左心房に戻る血液の循環をいう。", "大動脈を流れる血液は動脈血であるが、肺動脈を流れる血液は静脈血である。", "心臓の拍動のリズムは、心臓内の洞結節（洞房結節）からの電気刺激によって形成される。", "心拍出量は、健康な成人において安静時は1分間に約15リットルである。"], answer: 4, explanation: "安静時の心拍出量は、約5リットル/分です。15リットルではありません。" },
+        { id: 102, category: "労働生理", text: "血液の成分とその働きに関する記述として、誤っているものはどれか。", options: ["赤血球に含まれるヘモグロビンは、酸素と結合して酸素を全身の組織に運搬する。", "白血球のうち、好中球は細菌などの異物を貪食する働きを持つ。", "リンパ球は、免疫反応に関与しており、T細胞やB細胞などがある。", "血小板は、血管が損傷した際に凝集して止血する働きがある。", "血漿中のタンパク質であるアルブミンは、血液凝固に主要な役割を果たしている。"], answer: 4, explanation: "血液凝固に関与するのは「フィブリノゲン」です。アルブミンは血液の浸透圧維持や物質の運搬に関与します。" },
+        { id: 103, category: "労働生理", text: "ABO式血液型検査における反応として、正しいものはどれか。", options: ["A型の血液は、抗A血清と反応して凝集する。", "B型の血液は、抗B血清と反応せず凝集しない。", "O型の血液は、抗A血清および抗B血清の両方と反応して凝集する。", "AB型の血液は、抗A血清および抗B血清のいずれとも反応せず凝集しない。"], answer: 0, explanation: "A型の赤血球にはA抗原があるため、抗A血清（A抗体を含む試薬）と反応して凝集します。" },
+        { id: 104, category: "労働生理", text: "呼吸に関する記述として、正しいものはどれか。", options: ["呼吸運動は、主として横隔膜と肋間筋の収縮・弛緩によって行われる。", "吸気時には、横隔膜が弛緩してドーム状になり、胸腔内の圧力が上昇する。", "肺胞内の酸素分圧は、動脈血中の酸素分圧よりも低い。", "呼吸中枢は、大脳皮質の前頭葉にあり、随意的な呼吸調節を行っている。"], answer: 0, explanation: "吸気時は横隔膜が「収縮」して下がります。呼吸中枢は「延髄」にあります。" },
+        { id: 105, category: "労働生理", text: "基礎代謝に関する記述として、誤っているものはどれか。", options: ["基礎代謝量は、覚醒・横臥・安静時において、生命維持に必要な最小限のエネルギー消費量をいう。", "基礎代謝量は、一般に女性より男性の方が大きい。", "基礎代謝量は、加齢とともに増加する傾向がある。", "甲状腺ホルモンの分泌過剰（バセドウ病など）では、基礎代謝量は著しく高まる。"], answer: 2, explanation: "基礎代謝量は、加齢とともに「減少」します。筋肉量の減少などが影響します。" },
+        { id: 106, category: "労働生理", text: "自律神経系に関する記述として、誤っているものはどれか。", options: ["交感神経と副交感神経は、多くの臓器に対して互いに拮抗的に作用する。", "交感神経が優位になると、心拍数は増加し、血圧は上昇する。", "副交感神経が優位になると、瞳孔は散大し、気管支は拡張する。", "消化管の運動や消化液の分泌は、副交感神経によって促進される。"], answer: 2, explanation: "副交感神経（リラックス時）が優位になると、瞳孔は「収縮」し、気管支は「収縮」します。散大・拡張は交感神経の働きです。" },
+        { id: 107, category: "労働生理", text: "視覚に関する記述として、誤っているものはどれか。", options: ["眼球の水晶体は、カメラのレンズに相当し、厚みを変えてピント調節を行う。", "網膜にある錐状体（錐体）は、明るい所ではたらき、色を感じる。", "網膜にある杆状体（杆体）は、暗い所ではたらき、明暗を感じる。", "暗順応とは、暗い所から明るい所へ移動した際に、まぶしさを感じるが徐々に慣れる現象をいう。"], answer: 3, explanation: "記述は「明順応」の説明です。「暗順応」は、明るい所から暗い所へ移動した際に、徐々に見えるようになる現象です。" },
+        { id: 108, category: "労働生理", text: "耳（聴覚・平衡感覚）に関する記述として、正しいものはどれか。", options: ["鼓膜で受けた振動は、耳小骨によって増幅され、内耳の蝸牛へ伝えられる。", "半規管は、身体の傾きや重力の方向を感知する器官である。", "耳石器（前庭）は、身体の回転加速度を感知する器官である。", "中耳と咽頭をつなぐ耳管は、常に開いており、気圧調整を行っている。"], answer: 0, explanation: "半規管は「回転」を、耳石器は「傾き・重力」を感知します。耳管は通常閉じており、嚥下時などに開きます。" },
+        { id: 109, category: "労働生理", text: "筋肉に関する記述として、誤っているものはどれか。", options: ["骨格筋は横紋筋であり、随意筋である。", "筋肉の収縮のエネルギー源として、ATP（アデノシン三リン酸）が利用される。", "等尺性収縮（静的収縮）は、筋肉の長さを変えずに力を発揮する収縮であり、血液循環を阻害しやすい。", "速筋線維（白筋）は、収縮速度は遅いが持久力に優れ、有酸素運動に向いている。"], answer: 3, explanation: "速筋（白筋）は瞬発力に優れますが疲れやすいです。持久力に優れるのは「遅筋（赤筋）」です。" },
+        { id: 110, category: "労働生理", text: "ストレスや疲労に関する記述として、正しいものはどれか。", options: ["ストレス反応として、副腎皮質ホルモン（コルチゾール）の分泌が抑制される。", "睡眠のレム睡眠（REM睡眠）では、脳は覚醒に近い状態にあり、夢を見ることが多い。", "フリッカー検査は、点滅する光のちらつきを感じなくなる頻度を測定するもので、主に肉体的疲労の判定に用いられる。", "尿中のカテコールアミン量は、ストレスがかかると減少する。"], answer: 1, explanation: "ストレス時、コルチゾールやカテコールアミンは「増加」します。フリッカー検査は「精神疲労（中枢神経疲労）」の判定に用いられます。" },
+        { id: 201, category: "労働安全衛生法", text: "総括安全衛生管理者に関する記述として、誤っているものはどれか。", options: ["建設業で常時100人以上の労働者を使用する事業場では、選任しなければならない。", "運送業で常時300人以上の労働者を使用する事業場では、選任しなければならない。", "総括安全衛生管理者は、その事業場において事業の実施を統括管理する者をもって充てなければならない。", "総括安全衛生管理者は、都道府県労働局長への選任報告の義務はない。"], answer: 3, explanation: "総括安全衛生管理者を選任したときは、遅滞なく、所轄労働基準監督署長に報告しなければなりません。" },
+        { id: 202, category: "労働安全衛生法", text: "衛生管理者の選任に関する記述として、正しいものはどれか。", options: ["常時30人の労働者を使用する金融業の事業場では、衛生管理者を選任しなければならない。", "常時600人の労働者を使用する製造業の事業場では、衛生管理者を3人選任しなければならない。", "常時1000人を超える労働者を使用する事業場では、少なくとも1人を専任の衛生管理者としなければならない。", "第二種衛生管理者免許を有する者は、有害業務を含むすべての事業場で衛生管理者となることができる。"], answer: 2, explanation: "50人未満は選任不要。600人の場合は「3人」が正しい（500人超～1000人以下は3人）。専任要件の3が正解です。" },
+        { id: 203, category: "労働安全衛生法", text: "安全衛生委員会に関する記述として、誤っているものはどれか。", options: ["常時50人以上の労働者を使用するすべての業種の事業場で設置が義務付けられている。", "委員会の議長は、原則として総括安全衛生管理者またはそれに準ずる者がなる。", "委員の半数は、労働者の過半数代表者の推薦に基づき指名しなければならない。", "委員会は少なくとも毎月1回開催し、議事録を3年間保存しなければならない。"], answer: 0, explanation: "衛生委員会は全業種50人以上で義務ですが、「安全委員会」は業種によって義務かどうかが異なります。" },
+        { id: 204, category: "労働安全衛生法", text: "産業医の職務として、法令上規定されていないものはどれか。", options: ["健康診断の実施およびその結果に基づく労働者の健康を保持するための措置に関すること。", "作業環境の維持管理に関すること。", "労働者の健康管理等について、総括安全衛生管理者に対して勧告すること。", "労働災害が発生した場合の損害賠償額の算定に関すること。"], answer: 3, explanation: "損害賠償や法的な補償実務は産業医の職務範囲外です。" },
+        { id: 301, category: "労働衛生", text: "作業環境管理における必要換気量の算出に関して、室内の二酸化炭素濃度基準とされる数値はどれか。", options: ["0.05 % (500 ppm)", "0.1 % (1000 ppm)", "0.5 % (5000 ppm)", "1.0 % (10000 ppm)"], answer: 1, explanation: "事務所衛生基準規則において、室内の二酸化炭素含有率は100万分の1000（0.1% = 1000ppm）以下とする必要があります。" },
+        { id: 302, category: "労働衛生", text: "ＶＤＴ（Visual Display Terminals）作業における労働衛生管理において、適切でないものはどれか。", options: ["ディスプレイ画面の上端は、眼の高さと同じか、やや下になるようにする。", "ディスプレイと眼の距離は、40cm以上の距離を保つようにする。", "一連続作業時間が1時間を超えないようにし、次の連続作業までの間に10～15分の作業休止時間を設ける。", "室内はできるだけ暗くし、ディスプレイの輝度と室内の明度の差を大きくする。"], answer: 3, explanation: "明暗の差（コントラスト）が大きすぎると眼精疲労の原因になります。" },
+        { id: 303, category: "労働衛生", text: "食中毒に関する記述として、正しい組み合わせはどれか。", options: ["サルモネラ菌 ―― 潜伏期間が短く（3時間程度）、激しい嘔吐が特徴。", "腸炎ビブリオ ―― 真水（淡水）中で増殖しやすく、淡水魚が原因となる。", "黄色ブドウ球菌 ―― 手指の化膿巣などが汚染源となり、加熱しても毒素（エンテロトキシン）は分解されにくい。", "ボツリヌス菌 ―― 酸素を好む菌で、真空パック食品では増殖しない。"], answer: 2, explanation: "黄色ブドウ球菌の毒素は耐熱性があります。" },
+        { id: 304, category: "労働衛生", text: "一次救命処置に関する記述として、誤っているものはどれか。", options: ["傷病者に反応がない場合は、直ちに119番通報とAEDの手配を行う。", "呼吸の確認は、胸と腹部の動きを見て、10秒以内で行う。", "普段どおりの呼吸がない場合は、直ちに胸骨圧迫を開始する。", "胸骨圧迫は、1分間に60回程度のテンポで行う。"], answer: 3, explanation: "胸骨圧迫は、1分間に「100回～120回」の速いテンポで行います。" }
+    ];
+
+    /* ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+       【問題追加エリア】
+       今後私が生成する JSON データ（const batch3 = ...）を
+       この下に貼り付けてください。
+       ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+    */
+
+
+
+    // --- データ統合処理 ---
+    // ここに新しいbatch変数名（...batch3, ...batch4）を追記していくことで統合されます。
+    let allQuestions = [
+        ...batch1_sample,
+        ...batch2_physiology,
+        // ...batch3_toxic,    <-- 次回以降、コメントアウトを外して追加
+        // ...batch4_law       <-- その次
+    ];
+
+    // ================================================================
+    //  以下、アプリのロジック（変更不要）
+    // ================================================================
+
+    let currentScore = 0;
+    let currentStreak = 0;
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let isAnswering = true;
+
+    window.onload = function() {
+        // 初期ロード時に全問題数を更新
+        document.getElementById('totalCount').innerText = allQuestions.length;
+        generateMenu();
+    };
+
+    function generateMenu() {
+        const categories = [...new Set(allQuestions.map(q => q.category))];
+        const container = document.getElementById('categoryContainer');
+        container.innerHTML = '';
+
+        categories.forEach(cat => {
+            const btn = document.createElement('button');
+            const count = allQuestions.filter(q => q.category === cat).length;
+            btn.className = 'category-btn';
+            btn.innerHTML = `<strong>${cat}</strong><small>${count}問</small>`;
+            btn.onclick = () => startQuiz(cat);
+            container.appendChild(btn);
+        });
+    }
+
+    function startQuiz(category) {
+        if (category === 'all') {
+            currentQuestions = [...allQuestions];
+        } else {
+            currentQuestions = allQuestions.filter(q => q.category === category);
+        }
+        
+        currentQuestions.sort(() => Math.random() - 0.5);
+        currentIndex = 0;
+        
+        document.getElementById('menuScreen').classList.remove('active');
+        document.getElementById('quizScreen').classList.add('active');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        if (currentIndex >= currentQuestions.length) {
+            alert('選択範囲の問題が終了しました！メニューに戻ります。');
+            showMenu();
+            return;
+        }
+
+        isAnswering = true;
+        const q = currentQuestions[currentIndex];
+        
+        document.getElementById('qCategory').innerText = q.category;
+        document.getElementById('qProgress').innerText = `${currentIndex + 1} / ${currentQuestions.length}`;
+        document.getElementById('questionText').innerText = q.text;
+        
+        const optsContainer = document.getElementById('optionsContainer');
+        optsContainer.innerHTML = '';
+        document.getElementById('feedbackArea').style.display = 'none';
+
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            optsContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIndex, btnElement) {
+        if (!isAnswering) return;
+        isAnswering = false;
+
+        const q = currentQuestions[currentIndex];
+        const isCorrect = (selectedIndex === q.answer);
+        const feedbackArea = document.getElementById('feedbackArea');
+        const resultTitle = document.getElementById('resultTitle');
+        const bonusMsg = document.getElementById('bonusMsg');
+        const options = document.querySelectorAll('.option-btn');
+
+        options[q.answer].style.backgroundColor = '#d4edda';
+        options[q.answer].style.borderColor = '#28a745';
+        
+        if (isCorrect) {
+            currentStreak++;
+            let points = 10;
+            let bonus = 0;
+            
+            if (currentStreak >= 2) {
+                bonus = (currentStreak - 1) * 10;
+            }
+            
+            currentScore += (points + bonus);
+            resultTitle.innerText = "正解！ ⭕";
+            feedbackArea.className = "feedback-area feedback-correct";
+            
+            if (bonus > 0) bonusMsg.innerText = `${currentStreak}連続正解！ ボーナス +${bonus}pt`;
+            else bonusMsg.innerText = "";
+            
+            btnElement.innerText += " ⭕";
+        } else {
+            currentStreak = 0;
+            btnElement.style.backgroundColor = '#f8d7da';
+            btnElement.style.borderColor = '#dc3545';
+            btnElement.innerText += " ❌";
+            
+            resultTitle.innerText = "不正解... ❌";
+            feedbackArea.className = "feedback-area feedback-wrong";
+            bonusMsg.innerText = "";
+        }
+
+        document.getElementById('scoreDisplay').innerText = currentScore;
+        document.getElementById('comboDisplay').innerText = `Combo: ${currentStreak}`;
+
+        document.getElementById('explanationText').innerText = q.explanation;
+        feedbackArea.style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        loadQuestion();
+    }
+
+    function showMenu() {
+        document.getElementById('quizScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+        generateMenu();
+    }
+</script>
+
+</body>
+</html>
