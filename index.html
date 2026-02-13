@@ -3,142 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>衛生管理者 過去問演習マスター</title>
+    <title>衛生管理者 過去問演習1000本ノック（統合版）</title>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --accent: #3498db;
-            --success: #27ae60;
-            --error: #c0392b;
-            --bg: #f5f7fa;
-            --card-bg: #ffffff;
-        }
-        body {
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg);
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+        :root { --primary: #2c3e50; --accent: #2980b9; --success: #27ae60; --wrong: #c0392b; --bg: #f5f7fa; --card-bg: #ffffff; }
+        body { font-family: "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 800px; background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h1, h2 { text-align: center; color: var(--primary); margin-top: 0; }
-        
-        /* Stats Bar */
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            background: #ecf0f1;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
+        .stats-bar { display: flex; justify-content: space-between; background: #ecf0f1; padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; }
         .score-box span { color: var(--accent); font-size: 1.2em; }
         .combo-box { color: var(--success); }
-
-        /* Screens */
         .screen { display: none; }
         .screen.active { display: block; animation: fadeIn 0.3s; }
-
-        /* Menu */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .category-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .category-btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.2s; min-height: 80px; }
         .category-btn:hover { transform: translateY(-2px); background: #34495e; }
-        .category-btn small { font-size: 0.8em; opacity: 0.8; margin-top: 5px; }
-
-        /* Question */
-        .question-meta {
-            font-size: 0.9em;
-            color: #7f8c8d;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .question-text {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            font-weight: bold;
-            border-left: 5px solid var(--accent);
-            padding-left: 15px;
-        }
+        .question-meta { font-size: 0.9em; color: #7f8c8d; margin-bottom: 10px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .question-text { font-size: 18px; line-height: 1.6; margin-bottom: 25px; font-weight: bold; border-left: 5px solid var(--accent); padding-left: 15px; }
         .options-grid { display: grid; gap: 10px; }
-        .option-btn {
-            background: white;
-            border: 2px solid #bdc3c7;
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
+        .option-btn { background: white; border: 2px solid #bdc3c7; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; font-size: 16px; transition: all 0.2s; }
         .option-btn:hover { border-color: var(--accent); background: #f0f8ff; }
-
-        /* Feedback */
-        .feedback-area {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            display: none;
-        }
+        .feedback-area { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; }
         .feedback-correct { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
         .feedback-wrong { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
-        .explanation { margin-top: 10px; font-size: 0.95em; line-height: 1.5; }
-        
-        .next-btn, .menu-btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+        .next-btn, .menu-btn { display: block; width: 100%; padding: 15px; margin-top: 20px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
         .menu-btn { background: #95a5a6; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @media (max-width: 600px) {
-            .container { padding: 15px; }
-            .option-btn { padding: 12px; font-size: 14px; }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -152,29 +41,18 @@
     <div id="menuScreen" class="screen active">
         <h2>学習メニュー</h2>
         <p style="text-align:center; color:#666;">収録問題数: <span id="totalCount">0</span> 問</p>
-        <div class="category-grid" id="categoryContainer">
-            </div>
-        <button class="category-btn" style="width:100%; margin-top:15px; background:var(--accent); flex-direction:row;" onclick="startQuiz('all')">
-            <strong>全範囲から出題</strong>
-        </button>
+        <div class="category-grid" id="categoryContainer"></div>
+        <button class="category-btn" style="width:100%; margin-top:15px; background:var(--accent); flex-direction:row;" onclick="startQuiz('all')"><strong>全範囲から出題 (ランダム)</strong></button>
     </div>
 
     <div id="quizScreen" class="screen">
-        <div class="question-meta">
-            <span id="qCategory">単元名</span>
-            <span id="qProgress"></span>
-        </div>
+        <div class="question-meta"><span id="qCategory">単元</span><span id="qProgress"></span></div>
         <div class="question-text" id="questionText">問題文</div>
-        <div class="options-grid" id="optionsContainer">
-            </div>
-
+        <div class="options-grid" id="optionsContainer"></div>
         <div id="feedbackArea" class="feedback-area">
             <h3 id="resultTitle" style="margin-top:0;"></h3>
             <p id="bonusMsg" style="font-weight:bold; color:var(--success);"></p>
-            <div class="explanation">
-                <strong>【解説】</strong><br>
-                <span id="explanationText"></span>
-            </div>
+            <div class="explanation"><strong>【解説】</strong><br><span id="explanationText"></span></div>
             <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
             <button class="menu-btn" onclick="showMenu()">メニューに戻る</button>
         </div>
@@ -182,85 +60,25 @@
 </div>
 
 <script>
-    /* ================================================================
-      ★データ管理エリア★
-      ここに新しいデータブロック（変数）を追加していってください。
-     ================================================================
-    */
+    // --- Data Storage ---
+    window.allQuestions = [];
 
-    // 【Batch 1】 サンプル問題（5問）
-    const batch1_sample = [
-        { id: 1, category: "労働基準法", text: "労働基準法において、解雇予告手当を支払わずに即時解雇できる場合として、所轄労働基準監督署長の認定を受ける必要がないものはどれか。", options: ["天災事変その他やむを得ない事由のために事業の継続が不可能となった場合", "労働者の責に帰すべき事由に基づいて解雇する場合", "試用期間中の者を雇い入れの日から14日以内に解雇する場合", "期間の定めのある労働契約において、その期間が満了して契約を更新しない場合"], answer: 2, explanation: "「試用期間中の者を雇い入れの日から14日以内に解雇する場合」は、解雇予告および解雇予告手当の支払いは不要であり、除外認定を受ける必要もありません。" },
-        { id: 2, category: "労働安全衛生法", text: "常時50人以上の労働者を使用する事業場において、選任が義務付けられていないものはどれか。", options: ["産業医", "衛生管理者", "安全管理者（業種による）", "作業主任者（該当作業がない場合）", "総括安全衛生管理者"], answer: 4, explanation: "総括安全衛生管理者の選任が必要なのは、林業・鉱業・建設業等は常時100人以上、製造業等は常時300人以上、その他の業種は常時1000人以上です。" },
-        { id: 3, category: "労働衛生", text: "ＷＢＧＴ（暑さ指数）の算出式として、屋内の場合で正しいものはどれか。", options: ["0.7 × 自然湿球温度 ＋ 0.3 × 黒球温度", "0.7 × 自然湿球温度 ＋ 0.2 × 黒球温度 ＋ 0.1 × 乾球温度", "0.1 × 自然湿球温度 ＋ 0.9 × 黒球温度", "0.5 × 自然湿球温度 ＋ 0.5 × 乾球温度"], answer: 0, explanation: "屋内の場合（または屋外で太陽照射がない場合）のWBGTは、「0.7 × 自然湿球温度 ＋ 0.3 × 黒球温度」で算出します。" },
-        { id: 4, category: "労働生理", text: "血液循環に関する記述として、誤っているものはどれか。", options: ["心臓の右心室から肺動脈へ血液が送り出される循環を肺循環という。", "左心室から大動脈へ血液が送り出される循環を体循環という。", "肺静脈には、酸素を多く含んだ動脈血が流れている。", "門脈は、消化管から吸収した栄養分を心臓へ直接運ぶ血管である。"], answer: 3, explanation: "門脈は、胃や腸などの腹部臓器から集まった血液を「肝臓」へ送る血管です。心臓へ直接戻るわけではありません。" },
-        { id: 5, category: "関係法令", text: "年次有給休暇に関する記述のうち、法令上誤っているものはどれか。", options: ["比例付与の対象となる労働者の週所定労働時間は30時間未満である。", "管理監督者であっても、年次有給休暇は付与しなければならない。", "年次有給休暇の請求権は、これを付与された日から1年間行使しないときは時効により消滅する。", "使用者は、年次有給休暇を労働者の請求する時季に与えなければならないが、事業の正常な運営を妨げる場合は他の時季に変更できる。"], answer: 2, explanation: "年次有給休暇の請求権の時効は「2年」です。（労働基準法第115条）" }
-    ];
-
-    // 【Batch 2】 労働生理・関係法令重点編（前回生成分）
-    const batch2_physiology = [
-        { id: 101, category: "労働生理", text: "心臓および血液循環に関する記述として、誤っているものはどれか。", options: ["心臓は、自律神経の支配を受けているが、不随意筋である。", "肺循環とは、右心室から肺動脈を経て肺に至り、肺静脈を通って左心房に戻る血液の循環をいう。", "大動脈を流れる血液は動脈血であるが、肺動脈を流れる血液は静脈血である。", "心臓の拍動のリズムは、心臓内の洞結節（洞房結節）からの電気刺激によって形成される。", "心拍出量は、健康な成人において安静時は1分間に約15リットルである。"], answer: 4, explanation: "安静時の心拍出量は、約5リットル/分です。15リットルではありません。" },
-        { id: 102, category: "労働生理", text: "血液の成分とその働きに関する記述として、誤っているものはどれか。", options: ["赤血球に含まれるヘモグロビンは、酸素と結合して酸素を全身の組織に運搬する。", "白血球のうち、好中球は細菌などの異物を貪食する働きを持つ。", "リンパ球は、免疫反応に関与しており、T細胞やB細胞などがある。", "血小板は、血管が損傷した際に凝集して止血する働きがある。", "血漿中のタンパク質であるアルブミンは、血液凝固に主要な役割を果たしている。"], answer: 4, explanation: "血液凝固に関与するのは「フィブリノゲン」です。アルブミンは血液の浸透圧維持や物質の運搬に関与します。" },
-        { id: 103, category: "労働生理", text: "ABO式血液型検査における反応として、正しいものはどれか。", options: ["A型の血液は、抗A血清と反応して凝集する。", "B型の血液は、抗B血清と反応せず凝集しない。", "O型の血液は、抗A血清および抗B血清の両方と反応して凝集する。", "AB型の血液は、抗A血清および抗B血清のいずれとも反応せず凝集しない。"], answer: 0, explanation: "A型の赤血球にはA抗原があるため、抗A血清（A抗体を含む試薬）と反応して凝集します。" },
-        { id: 104, category: "労働生理", text: "呼吸に関する記述として、正しいものはどれか。", options: ["呼吸運動は、主として横隔膜と肋間筋の収縮・弛緩によって行われる。", "吸気時には、横隔膜が弛緩してドーム状になり、胸腔内の圧力が上昇する。", "肺胞内の酸素分圧は、動脈血中の酸素分圧よりも低い。", "呼吸中枢は、大脳皮質の前頭葉にあり、随意的な呼吸調節を行っている。"], answer: 0, explanation: "吸気時は横隔膜が「収縮」して下がります。呼吸中枢は「延髄」にあります。" },
-        { id: 105, category: "労働生理", text: "基礎代謝に関する記述として、誤っているものはどれか。", options: ["基礎代謝量は、覚醒・横臥・安静時において、生命維持に必要な最小限のエネルギー消費量をいう。", "基礎代謝量は、一般に女性より男性の方が大きい。", "基礎代謝量は、加齢とともに増加する傾向がある。", "甲状腺ホルモンの分泌過剰（バセドウ病など）では、基礎代謝量は著しく高まる。"], answer: 2, explanation: "基礎代謝量は、加齢とともに「減少」します。筋肉量の減少などが影響します。" },
-        { id: 106, category: "労働生理", text: "自律神経系に関する記述として、誤っているものはどれか。", options: ["交感神経と副交感神経は、多くの臓器に対して互いに拮抗的に作用する。", "交感神経が優位になると、心拍数は増加し、血圧は上昇する。", "副交感神経が優位になると、瞳孔は散大し、気管支は拡張する。", "消化管の運動や消化液の分泌は、副交感神経によって促進される。"], answer: 2, explanation: "副交感神経（リラックス時）が優位になると、瞳孔は「収縮」し、気管支は「収縮」します。散大・拡張は交感神経の働きです。" },
-        { id: 107, category: "労働生理", text: "視覚に関する記述として、誤っているものはどれか。", options: ["眼球の水晶体は、カメラのレンズに相当し、厚みを変えてピント調節を行う。", "網膜にある錐状体（錐体）は、明るい所ではたらき、色を感じる。", "網膜にある杆状体（杆体）は、暗い所ではたらき、明暗を感じる。", "暗順応とは、暗い所から明るい所へ移動した際に、まぶしさを感じるが徐々に慣れる現象をいう。"], answer: 3, explanation: "記述は「明順応」の説明です。「暗順応」は、明るい所から暗い所へ移動した際に、徐々に見えるようになる現象です。" },
-        { id: 108, category: "労働生理", text: "耳（聴覚・平衡感覚）に関する記述として、正しいものはどれか。", options: ["鼓膜で受けた振動は、耳小骨によって増幅され、内耳の蝸牛へ伝えられる。", "半規管は、身体の傾きや重力の方向を感知する器官である。", "耳石器（前庭）は、身体の回転加速度を感知する器官である。", "中耳と咽頭をつなぐ耳管は、常に開いており、気圧調整を行っている。"], answer: 0, explanation: "半規管は「回転」を、耳石器は「傾き・重力」を感知します。耳管は通常閉じており、嚥下時などに開きます。" },
-        { id: 109, category: "労働生理", text: "筋肉に関する記述として、誤っているものはどれか。", options: ["骨格筋は横紋筋であり、随意筋である。", "筋肉の収縮のエネルギー源として、ATP（アデノシン三リン酸）が利用される。", "等尺性収縮（静的収縮）は、筋肉の長さを変えずに力を発揮する収縮であり、血液循環を阻害しやすい。", "速筋線維（白筋）は、収縮速度は遅いが持久力に優れ、有酸素運動に向いている。"], answer: 3, explanation: "速筋（白筋）は瞬発力に優れますが疲れやすいです。持久力に優れるのは「遅筋（赤筋）」です。" },
-        { id: 110, category: "労働生理", text: "ストレスや疲労に関する記述として、正しいものはどれか。", options: ["ストレス反応として、副腎皮質ホルモン（コルチゾール）の分泌が抑制される。", "睡眠のレム睡眠（REM睡眠）では、脳は覚醒に近い状態にあり、夢を見ることが多い。", "フリッカー検査は、点滅する光のちらつきを感じなくなる頻度を測定するもので、主に肉体的疲労の判定に用いられる。", "尿中のカテコールアミン量は、ストレスがかかると減少する。"], answer: 1, explanation: "ストレス時、コルチゾールやカテコールアミンは「増加」します。フリッカー検査は「精神疲労（中枢神経疲労）」の判定に用いられます。" },
-        { id: 201, category: "労働安全衛生法", text: "総括安全衛生管理者に関する記述として、誤っているものはどれか。", options: ["建設業で常時100人以上の労働者を使用する事業場では、選任しなければならない。", "運送業で常時300人以上の労働者を使用する事業場では、選任しなければならない。", "総括安全衛生管理者は、その事業場において事業の実施を統括管理する者をもって充てなければならない。", "総括安全衛生管理者は、都道府県労働局長への選任報告の義務はない。"], answer: 3, explanation: "総括安全衛生管理者を選任したときは、遅滞なく、所轄労働基準監督署長に報告しなければなりません。" },
-        { id: 202, category: "労働安全衛生法", text: "衛生管理者の選任に関する記述として、正しいものはどれか。", options: ["常時30人の労働者を使用する金融業の事業場では、衛生管理者を選任しなければならない。", "常時600人の労働者を使用する製造業の事業場では、衛生管理者を3人選任しなければならない。", "常時1000人を超える労働者を使用する事業場では、少なくとも1人を専任の衛生管理者としなければならない。", "第二種衛生管理者免許を有する者は、有害業務を含むすべての事業場で衛生管理者となることができる。"], answer: 2, explanation: "50人未満は選任不要。600人の場合は「3人」が正しい（500人超～1000人以下は3人）。専任要件の3が正解です。" },
-        { id: 203, category: "労働安全衛生法", text: "安全衛生委員会に関する記述として、誤っているものはどれか。", options: ["常時50人以上の労働者を使用するすべての業種の事業場で設置が義務付けられている。", "委員会の議長は、原則として総括安全衛生管理者またはそれに準ずる者がなる。", "委員の半数は、労働者の過半数代表者の推薦に基づき指名しなければならない。", "委員会は少なくとも毎月1回開催し、議事録を3年間保存しなければならない。"], answer: 0, explanation: "衛生委員会は全業種50人以上で義務ですが、「安全委員会」は業種によって義務かどうかが異なります。" },
-        { id: 204, category: "労働安全衛生法", text: "産業医の職務として、法令上規定されていないものはどれか。", options: ["健康診断の実施およびその結果に基づく労働者の健康を保持するための措置に関すること。", "作業環境の維持管理に関すること。", "労働者の健康管理等について、総括安全衛生管理者に対して勧告すること。", "労働災害が発生した場合の損害賠償額の算定に関すること。"], answer: 3, explanation: "損害賠償や法的な補償実務は産業医の職務範囲外です。" },
-        { id: 301, category: "労働衛生", text: "作業環境管理における必要換気量の算出に関して、室内の二酸化炭素濃度基準とされる数値はどれか。", options: ["0.05 % (500 ppm)", "0.1 % (1000 ppm)", "0.5 % (5000 ppm)", "1.0 % (10000 ppm)"], answer: 1, explanation: "事務所衛生基準規則において、室内の二酸化炭素含有率は100万分の1000（0.1% = 1000ppm）以下とする必要があります。" },
-        { id: 302, category: "労働衛生", text: "ＶＤＴ（Visual Display Terminals）作業における労働衛生管理において、適切でないものはどれか。", options: ["ディスプレイ画面の上端は、眼の高さと同じか、やや下になるようにする。", "ディスプレイと眼の距離は、40cm以上の距離を保つようにする。", "一連続作業時間が1時間を超えないようにし、次の連続作業までの間に10～15分の作業休止時間を設ける。", "室内はできるだけ暗くし、ディスプレイの輝度と室内の明度の差を大きくする。"], answer: 3, explanation: "明暗の差（コントラスト）が大きすぎると眼精疲労の原因になります。" },
-        { id: 303, category: "労働衛生", text: "食中毒に関する記述として、正しい組み合わせはどれか。", options: ["サルモネラ菌 ―― 潜伏期間が短く（3時間程度）、激しい嘔吐が特徴。", "腸炎ビブリオ ―― 真水（淡水）中で増殖しやすく、淡水魚が原因となる。", "黄色ブドウ球菌 ―― 手指の化膿巣などが汚染源となり、加熱しても毒素（エンテロトキシン）は分解されにくい。", "ボツリヌス菌 ―― 酸素を好む菌で、真空パック食品では増殖しない。"], answer: 2, explanation: "黄色ブドウ球菌の毒素は耐熱性があります。" },
-        { id: 304, category: "労働衛生", text: "一次救命処置に関する記述として、誤っているものはどれか。", options: ["傷病者に反応がない場合は、直ちに119番通報とAEDの手配を行う。", "呼吸の確認は、胸と腹部の動きを見て、10秒以内で行う。", "普段どおりの呼吸がない場合は、直ちに胸骨圧迫を開始する。", "胸骨圧迫は、1分間に60回程度のテンポで行う。"], answer: 3, explanation: "胸骨圧迫は、1分間に「100回～120回」の速いテンポで行います。" }
-    ];
-
-    /* ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-       【問題追加エリア】
-       今後私が生成する JSON データ（const batch3 = ...）を
-       この下に貼り付けてください。
-       ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-    */
-
-
-
-    // --- データ統合処理 ---
-    // ここに新しいbatch変数名（...batch3, ...batch4）を追記していくことで統合されます。
-    let allQuestions = [
-        ...batch1_sample,
-        ...batch2_physiology,
-        // ...batch3_toxic,    <-- 次回以降、コメントアウトを外して追加
-        // ...batch4_law       <-- その次
-    ];
-
-    // ================================================================
-    //  以下、アプリのロジック（変更不要）
-    // ================================================================
-
-    let currentScore = 0;
-    let currentStreak = 0;
-    let currentQuestions = [];
-    let currentIndex = 0;
-    let isAnswering = true;
+    // --- Core Logic ---
+    let currentScore = 0, currentStreak = 0, currentQuestions = [], currentIndex = 0, isAnswering = true;
 
     window.onload = function() {
-        // 初期ロード時に全問題数を更新
-        document.getElementById('totalCount').innerText = allQuestions.length;
+        // Initial Load
+        document.getElementById('totalCount').innerText = window.allQuestions.length;
         generateMenu();
     };
 
     function generateMenu() {
-        const categories = [...new Set(allQuestions.map(q => q.category))];
+        const categories = [...new Set(window.allQuestions.map(q => q.category))];
         const container = document.getElementById('categoryContainer');
         container.innerHTML = '';
-
         categories.forEach(cat => {
             const btn = document.createElement('button');
-            const count = allQuestions.filter(q => q.category === cat).length;
+            const count = window.allQuestions.filter(q => q.category === cat).length;
             btn.className = 'category-btn';
             btn.innerHTML = `<strong>${cat}</strong><small>${count}問</small>`;
             btn.onclick = () => startQuiz(cat);
@@ -269,38 +87,25 @@
     }
 
     function startQuiz(category) {
-        if (category === 'all') {
-            currentQuestions = [...allQuestions];
-        } else {
-            currentQuestions = allQuestions.filter(q => q.category === category);
-        }
-        
+        if (window.allQuestions.length === 0) { alert("問題データがありません。"); return; }
+        currentQuestions = category === 'all' ? [...window.allQuestions] : window.allQuestions.filter(q => q.category === category);
         currentQuestions.sort(() => Math.random() - 0.5);
         currentIndex = 0;
-        
         document.getElementById('menuScreen').classList.remove('active');
         document.getElementById('quizScreen').classList.add('active');
         loadQuestion();
     }
 
     function loadQuestion() {
-        if (currentIndex >= currentQuestions.length) {
-            alert('選択範囲の問題が終了しました！メニューに戻ります。');
-            showMenu();
-            return;
-        }
-
+        if (currentIndex >= currentQuestions.length) { alert('選択範囲の問題が終了しました！メニューに戻ります。'); showMenu(); return; }
         isAnswering = true;
         const q = currentQuestions[currentIndex];
-        
         document.getElementById('qCategory').innerText = q.category;
         document.getElementById('qProgress').innerText = `${currentIndex + 1} / ${currentQuestions.length}`;
         document.getElementById('questionText').innerText = q.text;
-        
         const optsContainer = document.getElementById('optionsContainer');
         optsContainer.innerHTML = '';
         document.getElementById('feedbackArea').style.display = 'none';
-
         q.options.forEach((opt, index) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
@@ -313,64 +118,241 @@
     function checkAnswer(selectedIndex, btnElement) {
         if (!isAnswering) return;
         isAnswering = false;
-
         const q = currentQuestions[currentIndex];
         const isCorrect = (selectedIndex === q.answer);
         const feedbackArea = document.getElementById('feedbackArea');
-        const resultTitle = document.getElementById('resultTitle');
-        const bonusMsg = document.getElementById('bonusMsg');
         const options = document.querySelectorAll('.option-btn');
-
         options[q.answer].style.backgroundColor = '#d4edda';
         options[q.answer].style.borderColor = '#28a745';
         
         if (isCorrect) {
             currentStreak++;
-            let points = 10;
-            let bonus = 0;
-            
-            if (currentStreak >= 2) {
-                bonus = (currentStreak - 1) * 10;
-            }
-            
-            currentScore += (points + bonus);
-            resultTitle.innerText = "正解！ ⭕";
+            let bonus = currentStreak >= 2 ? (currentStreak - 1) * 10 : 0;
+            currentScore += (10 + bonus);
+            document.getElementById('resultTitle').innerText = "正解！ ⭕";
+            document.getElementById('bonusMsg').innerText = bonus > 0 ? `${currentStreak}連続正解！ +${bonus}pt` : "";
             feedbackArea.className = "feedback-area feedback-correct";
-            
-            if (bonus > 0) bonusMsg.innerText = `${currentStreak}連続正解！ ボーナス +${bonus}pt`;
-            else bonusMsg.innerText = "";
-            
             btnElement.innerText += " ⭕";
         } else {
             currentStreak = 0;
             btnElement.style.backgroundColor = '#f8d7da';
             btnElement.style.borderColor = '#dc3545';
             btnElement.innerText += " ❌";
-            
-            resultTitle.innerText = "不正解... ❌";
+            document.getElementById('resultTitle').innerText = "不正解... ❌";
+            document.getElementById('bonusMsg').innerText = "";
             feedbackArea.className = "feedback-area feedback-wrong";
-            bonusMsg.innerText = "";
         }
-
         document.getElementById('scoreDisplay').innerText = currentScore;
         document.getElementById('comboDisplay').innerText = `Combo: ${currentStreak}`;
-
         document.getElementById('explanationText').innerText = q.explanation;
         feedbackArea.style.display = 'block';
     }
 
-    function nextQuestion() {
-        currentIndex++;
-        loadQuestion();
-    }
-
+    function nextQuestion() { currentIndex++; loadQuestion(); }
     function showMenu() {
         document.getElementById('quizScreen').classList.remove('active');
         document.getElementById('menuScreen').classList.add('active');
         generateMenu();
     }
+    
+    // Helper to add questions easily
+    function addQuestions(list) {
+        window.allQuestions = window.allQuestions.concat(list);
+        // If menu is active, update counts immediately
+        if(document.getElementById('menuScreen').classList.contains('active')) {
+            document.getElementById('totalCount').innerText = window.allQuestions.length;
+            generateMenu();
+        }
+    }
 </script>
 
-</body>
+<script>
+addQuestions([
+    // --- Vol.1 (Sample) ---
+    { category: "労働基準法", text: "労働基準法において、解雇予告手当を支払わずに即時解雇できる場合として、所轄労働基準監督署長の認定を受ける必要がないものはどれか。", options: ["天災事変その他やむを得ない事由のために事業の継続が不可能となった場合", "労働者の責に帰すべき事由に基づいて解雇する場合", "試用期間中の者を雇い入れの日から14日以内に解雇する場合", "期間の定めのある労働契約において、その期間が満了して契約を更新しない場合"], answer: 2, explanation: "「試用期間中の者を雇い入れの日から14日以内に解雇する場合」は、解雇予告および解雇予告手当の支払いは不要であり、除外認定を受ける必要もありません。" },
+    { category: "労働安全衛生法", text: "常時50人以上の労働者を使用する事業場において、選任が義務付けられていないものはどれか。", options: ["産業医", "衛生管理者", "安全管理者（業種による）", "作業主任者（該当作業がない場合）", "総括安全衛生管理者"], answer: 4, explanation: "総括安全衛生管理者の選任が必要なのは、林業・鉱業・建設業等は常時100人以上、製造業等は常時300人以上、その他の業種は常時1000人以上です。" },
+    { category: "労働衛生(一般)", text: "ＷＢＧＴ（暑さ指数）の算出式として、屋内の場合で正しいものはどれか。", options: ["0.7 × 自然湿球温度 ＋ 0.3 × 黒球温度", "0.7 × 自然湿球温度 ＋ 0.2 × 黒球温度 ＋ 0.1 × 乾球温度", "0.1 × 自然湿球温度 ＋ 0.9 × 黒球温度", "0.5 × 自然湿球温度 ＋ 0.5 × 乾球温度"], answer: 0, explanation: "屋内の場合（または屋外で太陽照射がない場合）のWBGTは、「0.7 × 自然湿球温度 ＋ 0.3 × 黒球温度」で算出します。" },
+    { category: "労働生理", text: "血液循環に関する記述として、誤っているものはどれか。", options: ["心臓の右心室から肺動脈へ血液が送り出される循環を肺循環という。", "左心室から大動脈へ血液が送り出される循環を体循環という。", "肺静脈には、酸素を多く含んだ動脈血が流れている。", "門脈は、消化管から吸収した栄養分を心臓へ直接運ぶ血管である。"], answer: 3, explanation: "門脈は、胃や腸などの腹部臓器から集まった血液を「肝臓」へ送る血管です。心臓へ直接戻るわけではありません。" },
+    { category: "関係法令(一般)", text: "年次有給休暇に関する記述のうち、法令上誤っているものはどれか。", options: ["比例付与の対象となる労働者の週所定労働時間は30時間未満である。", "管理監督者であっても、年次有給休暇は付与しなければならない。", "年次有給休暇の請求権は、これを付与された日から1年間行使しないときは時効により消滅する。", "使用者は、年次有給休暇を労働者の請求する時季に与えなければならないが、事業の正常な運営を妨げる場合は他の時季に変更できる。"], answer: 2, explanation: "年次有給休暇の請求権の時効は「2年」です。" },
 
+    // --- Vol.2 (Physiology & Law Basics) ---
+    { category: "労働生理", text: "心臓および血液循環に関する記述として、誤っているものはどれか。", options: ["心臓は、自律神経の支配を受けているが、不随意筋である。", "肺循環とは、右心室から肺動脈を経て肺に至り、肺静脈を通って左心房に戻る血液の循環をいう。", "大動脈を流れる血液は動脈血であるが、肺動脈を流れる血液は静脈血である。", "心臓の拍動のリズムは、心臓内の洞結節（洞房結節）からの電気刺激によって形成される。", "心拍出量は、健康な成人において安静時は1分間に約15リットルである。"], answer: 4, explanation: "安静時の心拍出量は、約5リットル/分です。" },
+    { category: "労働生理", text: "血液の成分とその働きに関する記述として、誤っているものはどれか。", options: ["赤血球に含まれるヘモグロビンは、酸素と結合して酸素を全身の組織に運搬する。", "白血球のうち、好中球は細菌などの異物を貪食する働きを持つ。", "リンパ球は、免疫反応に関与しており、T細胞やB細胞などがある。", "血小板は、血管が損傷した際に凝集して止血する働きがある。", "血漿中のタンパク質であるアルブミンは、血液凝固に主要な役割を果たしている。"], answer: 4, explanation: "血液凝固に関与するのは「フィブリノゲン」です。" },
+    { category: "労働生理", text: "ABO式血液型検査における反応として、正しいものはどれか。", options: ["A型の血液は、抗A血清と反応して凝集する。", "B型の血液は、抗B血清と反応せず凝集しない。", "O型の血液は、抗A血清および抗B血清の両方と反応して凝集する。", "AB型の血液は、抗A血清および抗B血清のいずれとも反応せず凝集しない。"], answer: 0, explanation: "A型の赤血球にはA抗原があるため、抗A血清（A抗体を含む試薬）と反応して凝集します。" },
+    { category: "労働生理", text: "呼吸に関する記述として、正しいものはどれか。", options: ["呼吸運動は、主として横隔膜と肋間筋の収縮・弛緩によって行われる。", "吸気時には、横隔膜が弛緩してドーム状になり、胸腔内の圧力が上昇する。", "肺胞内の酸素分圧は、動脈血中の酸素分圧よりも低い。", "呼吸中枢は、大脳皮質の前頭葉にあり、随意的な呼吸調節を行っている。"], answer: 0, explanation: "吸気時は横隔膜が「収縮」して下がります。呼吸中枢は「延髄」にあります。" },
+    { category: "労働生理", text: "基礎代謝に関する記述として、誤っているものはどれか。", options: ["基礎代謝量は、覚醒・横臥・安静時において、生命維持に必要な最小限のエネルギー消費量をいう。", "基礎代謝量は、一般に女性より男性の方が大きい。", "基礎代謝量は、加齢とともに増加する傾向がある。", "甲状腺ホルモンの分泌過剰（バセドウ病など）では、基礎代謝量は著しく高まる。"], answer: 2, explanation: "基礎代謝量は、加齢とともに「減少」します。" },
+    { category: "労働生理", text: "自律神経系に関する記述として、誤っているものはどれか。", options: ["交感神経と副交感神経は、多くの臓器に対して互いに拮抗的に作用する。", "交感神経が優位になると、心拍数は増加し、血圧は上昇する。", "副交感神経が優位になると、瞳孔は散大し、気管支は拡張する。", "消化管の運動や消化液の分泌は、副交感神経によって促進される。"], answer: 2, explanation: "副交感神経（リラックス時）が優位になると、瞳孔は「収縮」し、気管支は「収縮」します。" },
+    { category: "労働生理", text: "視覚に関する記述として、誤っているものはどれか。", options: ["眼球の水晶体は、カメラのレンズに相当し、厚みを変えてピント調節を行う。", "網膜にある錐状体（錐体）は、明るい所ではたらき、色を感じる。", "網膜にある杆状体（杆体）は、暗い所ではたらき、明暗を感じる。", "暗順応とは、暗い所から明るい所へ移動した際に、まぶしさを感じるが徐々に慣れる現象をいう。"], answer: 3, explanation: "記述は「明順応」の説明です。" },
+    { category: "労働生理", text: "耳（聴覚・平衡感覚）に関する記述として、正しいものはどれか。", options: ["鼓膜で受けた振動は、耳小骨によって増幅され、内耳の蝸牛へ伝えられる。", "半規管は、身体の傾きや重力の方向を感知する器官である。", "耳石器（前庭）は、身体の回転加速度を感知する器官である。", "中耳と咽頭をつなぐ耳管は、常に開いており、気圧調整を行っている。"], answer: 0, explanation: "半規管は「回転」を、耳石器は「傾き・重力」を感知します。" },
+    { category: "労働生理", text: "筋肉に関する記述として、誤っているものはどれか。", options: ["骨格筋は横紋筋であり、随意筋である。", "筋肉の収縮のエネルギー源として、ATP（アデノシン三リン酸）が利用される。", "等尺性収縮（静的収縮）は、筋肉の長さを変えずに力を発揮する収縮であり、血液循環を阻害しやすい。", "速筋線維（白筋）は、収縮速度は遅いが持久力に優れ、有酸素運動に向いている。"], answer: 3, explanation: "速筋（白筋）は瞬発力に優れますが疲れやすいです。持久力に優れるのは「遅筋（赤筋）」です。" },
+    { category: "労働生理", text: "ストレスや疲労に関する記述として、正しいものはどれか。", options: ["ストレス反応として、副腎皮質ホルモン（コルチゾール）の分泌が抑制される。", "睡眠のレム睡眠（REM睡眠）では、脳は覚醒に近い状態にあり、夢を見ることが多い。", "フリッカー検査は、点滅する光のちらつきを感じなくなる頻度を測定するもので、主に肉体的疲労の判定に用いられる。", "尿中のカテコールアミン量は、ストレスがかかると減少する。"], answer: 1, explanation: "ストレス時、コルチゾールやカテコールアミンは「増加」します。フリッカー検査は「精神疲労」の判定に用いられます。" },
+    { category: "労働安全衛生法", text: "総括安全衛生管理者に関する記述として、誤っているものはどれか。", options: ["建設業で常時100人以上の労働者を使用する事業場では、選任しなければならない。", "運送業で常時300人以上の労働者を使用する事業場では、選任しなければならない。", "総括安全衛生管理者は、その事業場において事業の実施を統括管理する者をもって充てなければならない。", "総括安全衛生管理者は、都道府県労働局長への選任報告の義務はない。"], answer: 3, explanation: "総括安全衛生管理者を選任したときは、遅滞なく、所轄労働基準監督署長に報告しなければなりません。" },
+    { category: "労働安全衛生法", text: "衛生管理者の選任に関する記述として、正しいものはどれか。", options: ["常時30人の労働者を使用する金融業の事業場では、衛生管理者を選任しなければならない。", "常時600人の労働者を使用する製造業の事業場では、衛生管理者を3人選任しなければならない。", "常時1000人を超える労働者を使用する事業場では、少なくとも1人を専任の衛生管理者としなければならない。", "第二種衛生管理者免許を有する者は、有害業務を含むすべての事業場で衛生管理者となることができる。"], answer: 2, explanation: "50人未満は選任不要。600人の場合は「3人」が正しいです。専任要件の3が正解です。" },
+    { category: "労働安全衛生法", text: "安全衛生委員会に関する記述として、誤っているものはどれか。", options: ["常時50人以上の労働者を使用するすべての業種の事業場で設置が義務付けられている。", "委員会の議長は、原則として総括安全衛生管理者またはそれに準ずる者がなる。", "委員の半数は、労働者の過半数代表者の推薦に基づき指名しなければならない。", "委員会は少なくとも毎月1回開催し、議事録を3年間保存しなければならない。"], answer: 0, explanation: "衛生委員会は全業種50人以上で義務ですが、「安全委員会」は業種によって義務かどうかが異なります。" },
+    { category: "労働安全衛生法", text: "産業医の職務として、法令上規定されていないものはどれか。", options: ["健康診断の実施およびその結果に基づく労働者の健康を保持するための措置に関すること。", "作業環境の維持管理に関すること。", "労働者の健康管理等について、総括安全衛生管理者に対して勧告すること。", "労働災害が発生した場合の損害賠償額の算定に関すること。"], answer: 3, explanation: "損害賠償や法的な補償実務は産業医の職務範囲外です。" },
+    { category: "労働衛生(一般)", text: "作業環境管理における必要換気量の算出に関して、室内の二酸化炭素濃度基準とされる数値はどれか。", options: ["0.05 % (500 ppm)", "0.1 % (1000 ppm)", "0.5 % (5000 ppm)", "1.0 % (10000 ppm)"], answer: 1, explanation: "事務所衛生基準規則において、室内の二酸化炭素含有率は0.1%（1000ppm）以下とする必要があります。" },
+    { category: "労働衛生(一般)", text: "ＶＤＴ（Visual Display Terminals）作業における労働衛生管理において、適切でないものはどれか。", options: ["ディスプレイ画面の上端は、眼の高さと同じか、やや下になるようにする。", "ディスプレイと眼の距離は、40cm以上の距離を保つようにする。", "一連続作業時間が1時間を超えないようにし、次の連続作業までの間に10～15分の作業休止時間を設ける。", "室内はできるだけ暗くし、ディスプレイの輝度と室内の明度の差を大きくする。"], answer: 3, explanation: "明暗の差（コントラスト）が大きすぎると眼精疲労の原因になります。" },
+    { category: "労働衛生(一般)", text: "食中毒に関する記述として、正しい組み合わせはどれか。", options: ["サルモネラ菌 ―― 潜伏期間が短く（3時間程度）、激しい嘔吐が特徴。", "腸炎ビブリオ ―― 真水（淡水）中で増殖しやすく、淡水魚が原因となる。", "黄色ブドウ球菌 ―― 手指の化膿巣などが汚染源となり、加熱しても毒素（エンテロトキシン）は分解されにくい。", "ボツリヌス菌 ―― 酸素を好む菌で、真空パック食品では増殖しない。"], answer: 2, explanation: "黄色ブドウ球菌の毒素は耐熱性があります。腸炎ビブリオは海水で増殖します。" },
+    { category: "労働衛生(一般)", text: "一次救命処置に関する記述として、誤っているものはどれか。", options: ["傷病者に反応がない場合は、直ちに119番通報とAEDの手配を行う。", "呼吸の確認は、胸と腹部の動きを見て、10秒以内で行う。", "普段どおりの呼吸がない場合は、直ちに胸骨圧迫を開始する。", "胸骨圧迫は、1分間に60回程度のテンポで行う。"], answer: 3, explanation: "胸骨圧迫は、1分間に「100回～120回」の速いテンポで行います。" },
+
+    // --- Vol.3 (Harmful) ---
+    { category: "労働衛生(有害)", text: "有機溶剤業務を行う屋内作業場において、有機溶剤の区分と色分け表示の組み合わせとして、正しいものはどれか。", options: ["第一種有機溶剤 ―― 青色", "第二種有機溶剤 ―― 黄色", "第三種有機溶剤 ―― 赤色", "第一種有機溶剤 ―― 赤色"], answer: 3, explanation: "区分と色の覚え方は「赤・黄・青」です。第一種＝赤、第二種＝黄、第三種＝青です。" },
+    { category: "労働衛生(有害)", text: "有機溶剤等健康診断の項目として、法令上規定されていないものはどれか。", options: ["尿中の有機溶剤の代謝物の量の検査", "自覚症状及び他覚症状の有無の検査", "肝機能検査（AST、ALT、γ-GTP等）", "胸部エックス線検査"], answer: 3, explanation: "胸部エックス線検査は、じん肺健康診断等の項目であり、有機溶剤健診では必須項目ではありません。" },
+    { category: "労働衛生(有害)", text: "有機溶剤を入れていた空容器の処理として、法令上正しい措置はどれか。", options: ["密閉するか、屋外の一定の場所に集積しておく。", "十分に洗浄すれば、屋内の任意の場所に保管できる。", "中身が空であれば、特に措置は必要ない。", "産業廃棄物として直ちに焼却処分しなければならない。"], answer: 0, explanation: "空容器は「密閉する」か「屋外の一定の場所に集積」しなければなりません。" },
+    { category: "労働衛生(有害)", text: "特定化学物質のうち、製造許可物質（製造しようとする者が厚生労働大臣の許可を受けなければならないもの）はどれか。", options: ["塩素", "アンモニア", "ベンジジン及びその塩", "硫酸"], answer: 2, explanation: "ベンジジン等は、極めて発がん性が高いため「製造許可物質」に指定されています。" },
+    { category: "労働衛生(有害)", text: "特定化学物質を取り扱う作業場に設ける局所排気装置の要件として、正しい記述はどれか。", options: ["ダクトは、長さをできるだけ長くし、屈曲部を多くする。", "排気口は、屋根から1.5m以上高くし、直接外気へ開放する。", "フードは、発散源からできるだけ離れた位置に設置する。", "除じん装置は、ファンの下流（排気側）に設置する。"], answer: 1, explanation: "ダクトは短く、フードは近く。除じん装置は通常ファンの上流です。" },
+    { category: "労働衛生(有害)", text: "酸素欠乏危険作業を行う場所における、酸素濃度の基準として正しいものはどれか。", options: ["16%以上", "18%以上", "21%以上", "24%以上"], answer: 1, explanation: "酸素濃度を「18%以上」に保つよう規定されています。" },
+    { category: "労働衛生(有害)", text: "硫化水素中毒に関する記述として、誤っているものはどれか。", options: ["硫化水素は、腐卵臭（卵が腐ったようなにおい）が特徴である。", "高濃度の硫化水素を吸入すると、嗅覚が麻痺し、臭いを感じなくなることがある。", "酸素欠乏危険作業（第二種）では、酸素濃度の測定に加え、硫化水素濃度の測定も義務付けられている。", "硫化水素の許容濃度（濃度基準）は、50ppmである。"], answer: 3, explanation: "硫化水素の濃度基準は「10ppm」以下です。" },
+    { category: "労働衛生(有害)", text: "じん肺に関する記述として、誤っているものはどれか。", options: ["じん肺は、粉じんを長期間吸入することによって肺に生じた繊維増殖性変化を主体とする疾病である。", "じん肺健康診断は、常時粉じん作業に従事する労働者に対し、原則として毎年1回実施しなければならない。", "じん肺管理区分は、管理１から管理４までの４区分に分けられる。", "溶接ヒューム（溶接煙）も、じん肺の原因となる粉じんに含まれる。"], answer: 1, explanation: "じん肺健康診断は、常時従事期間中は『3年以内ごとに1回』が原則です。（管理区分により異なりますが、一律毎年ではありません）" },
+    { category: "労働衛生(有害)", text: "粉じん作業を行う屋内作業場において、法令上、定期的に実施しなければならない測定はどれか。", options: ["有機溶剤濃度測定", "一酸化炭素濃度測定", "空気中の粉じん濃度測定", "放射線量測定"], answer: 2, explanation: "粉じん作業場では、6ヶ月以内ごとに1回、空気中の粉じん濃度の測定が必要です。" },
+    { category: "労働衛生(有害)", text: "騒音性難聴（職業性難聴）の特徴として、正しいものはどれか。", options: ["初期には、低音域（1000Hz以下）の聴力が低下する。", "伝音性難聴に分類される。", "C5-dipと呼ばれる、4000Hz付近の聴力低下が特徴的である。", "一度低下した聴力は、薬物療法で容易に回復する。"], answer: 2, explanation: "騒音性難聴は「感音性難聴」であり、4000Hz付近の聴力が低下する「C5-dip」が特徴です。" },
+    { category: "労働衛生(有害)", text: "振動障害（白ろう病）に関する記述として、誤っているものはどれか。", options: ["チェーンソーや削岩機などの振動工具の使用によって発症する。", "レイノー現象（手指が白くなる発作）が特徴的な症状である。", "冬期などの寒冷時に症状が悪化しやすい。", "末梢循環障害は見られるが、末梢神経障害は伴わない。"], answer: 3, explanation: "振動障害は、末梢循環障害、末梢神経障害、運動器障害の3つが複合的に現れます。" },
+    { category: "労働衛生(有害)", text: "電離放射線に関する記述として、誤っているものはどれか。", options: ["アルファ線は透過力が弱く、紙一枚で遮断できる。", "ガンマ線やエックス線は透過力が強く、鉛や厚いコンクリートで遮蔽する。", "被ばくの影響において、白血病やがんは「確定的影響」に分類される。", "等価線量の単位として、シーベルト（Sv）が用いられる。"], answer: 2, explanation: "白血病やがんは、しきい値がない「確率的影響」に分類されます。" },
+    { category: "労働衛生(有害)", text: "防毒マスクの使用に関する記述として、誤っているものはどれか。", options: ["作業環境中の酸素濃度が18%以上の場所で使用する。", "吸収缶は、対象とするガスの種類に合ったものを使用する。", "破過時間（有効時間）を超えた吸収缶は、再使用してはならない。", "高濃度の有毒ガス（暴露限界の数十倍以上）がある場所でも、吸収缶を交換すれば使用できる。"], answer: 3, explanation: "高濃度の場合や濃度不明の場合は、送気マスクや自給式呼吸器を使用しなければなりません。" },
+    { category: "労働衛生(有害)", text: "防じんマスクの選択と使用に関する記述として、正しいものはどれか。", options: ["「使い捨て式」と「取替え式」があり、溶接作業では必ず「使い捨て式」を使用する。", "マスクの面体と顔面の間に隙間がないか確認するため、フィットテスト（密着性確認）を行う。", "防じんマスクは、有毒ガスが存在する環境でも使用できる。", "国家検定の合格標章がないものでも、性能が良ければ使用してよい。"], answer: 1, explanation: "防じんマスクはガスを防げません。必ず国家検定合格品を使用し、フィットテストを行います。" },
+    { category: "労働衛生(有害)", text: "作業環境測定の結果の評価（管理区分）について、正しい記述はどれか。", options: ["第一管理区分：作業環境管理が適切である状態。", "第二管理区分：直ちに改善措置が必要な状態。", "第三管理区分：作業環境管理に改善の余地がある状態。", "A測定とB測定の結果が異なる場合、良い方の結果を採用する。"], answer: 0, explanation: "第一管理区分＝適切。第二管理区分＝改善の余地あり。第三管理区分＝不適切。" },
+    { category: "労働衛生(有害)", text: "有害物質の抑制対策として、最も優先順位が高い（効果的かつ根本的な）措置はどれか。", options: ["保護具の使用（防毒マスク等）", "局所排気装置の設置", "有害性の低い物質への転換（代替化）", "作業時間の短縮"], answer: 2, explanation: "対策の優先順位：1.除去・代替、2.工学的対策、3.管理的対策、4.個人的対策。" },
+    { category: "関係法令(有害)", text: "作業主任者の選任が必要な作業として、誤っているものはどれか。", options: ["特定化学物質（第一類・第二類）を製造し、又は取り扱う作業", "有機溶剤（第一種・第二種）を製造し、又は取り扱う作業", "酸素欠乏危険場所における作業", "常時30人以上で行う一般事務作業"], answer: 3, explanation: "事務作業に作業主任者は不要です。" },
+    { category: "関係法令(有害)", text: "特別教育を必要とする業務に含まれないものはどれか。", options: ["廃棄物の焼却施設において、ダイオキシン類を取り扱う業務", "石綿（アスベスト）等が使用されている建築物の解体等の作業", "酸素欠乏危険場所における作業", "有機溶剤を取り扱う業務（屋内作業場）"], answer: 3, explanation: "有機溶剤業務には「特別教育」の規定はありません（雇い入れ時の教育等でカバー）。" },
+    { category: "関係法令(有害)", text: "定期自主検査の実施義務がある機械・装置として、誤っているものはどれか。", options: ["局所排気装置（1年以内ごとに1回）", "プレス機械（1年以内ごとに1回）", "フォークリフト（1年以内ごとに1回）", "電動ドリル等の携帯用電気工具（1年以内ごとに1回）"], answer: 3, explanation: "携帯用電気工具には、法令による定期自主検査の義務付けはありません。" },
+    { category: "関係法令(有害)", text: "製造等禁止物質（製造・輸入・譲渡・使用が禁止）に含まれないものはどれか。", options: ["黄りんマッチ", "ベンジジン", "石綿（アモサイト、クロシドライト等すべて）", "塩素化ビフェニル（PCB）", "ジクロロベンジジン"], answer: 4, explanation: "ジクロロベンジジンは「製造許可物質」であり、禁止物質ではありません。" },
+
+    // --- Vol.4 (Labor Standards Law) ---
+    { category: "労働基準法", text: "労働契約の締結に際し、使用者が労働者に対して書面（労働条件通知書等）で明示しなければならない事項に含まれないものはどれか。", options: ["賃金の決定、計算及び支払の方法", "退職に関する事項（解雇の事由を含む）", "始業及び終業の時刻、休憩時間", "寄宿舎に寄宿させる場合の食費等の負担に関する事項"], answer: 3, explanation: "「寄宿舎」に関する事項は、口頭での明示でもよい事項（相対的明示事項）です。他の3つは必ず書面で明示しなければならない絶対的明示事項です。" },
+    { category: "労働基準法", text: "解雇制限（解雇してはならない期間）に関する記述として、正しいものはどれか。", options: ["業務上の負傷で療養中の期間及びその後30日間は、いかなる場合も解雇できない。", "産前産後の休業期間及びその後30日間は、解雇してはならない。", "試用期間中の者については、解雇制限の規定は適用されない。", "打切補償を支払った場合でも、解雇制限期間中は解雇できない。"], answer: 1, explanation: "業務上負傷の療養期間＋30日間と、産前産後休業期間＋30日間は解雇制限期間です。ただし、打切補償（療養開始から3年経過後）を支払った場合は解雇制限が解除されます。" },
+    { category: "労働基準法", text: "平均賃金の計算において、算定期間（以前3ヶ月間）の日数から控除する期間として、誤っているものはどれか。", options: ["業務上の負傷または疾病により療養のために休業した期間", "産前産後の休業期間", "年次有給休暇を取得した期間", "使用者の責めに帰すべき事由により休業した期間"], answer: 2, explanation: "年次有給休暇を取得した期間は、算定期間から控除しません（通常通り働いたものとして計算に含めます）。" },
+    { category: "労働基準法", text: "賃金支払いの5原則（通貨払、直接払、全額払、毎月1回以上払、一定期日払）の例外として、法令上認められていないものはどれか。", options: ["法令に別段の定めがある場合の、税金等の控除（全額払の例外）", "労使協定がある場合の、賃金の一部控除（全額払の例外）", "労働者の同意がある場合の、銀行口座への振込（通貨払の例外）", "労働者が未成年の場合の、親権者への代理払い（直接払の例外）"], answer: 3, explanation: "未成年者であっても、賃金は本人に直接支払わなければなりません（親権者が代理で受け取ることは禁止されています）。" },
+    { category: "労働基準法", text: "労働時間に関する記述として、正しいものはどれか。", options: ["1週間の法定労働時間は40時間であるが、特例措置対象事業場（常時10人未満の商業・映画演劇業・保健衛生業・接客娯楽業）は46時間まで認められる。", "法定労働時間は、休憩時間を含めて計算する。", "坑内労働における労働時間は、坑口に入った時刻から坑口を出た時刻までをいう。", "管理監督者についても、労働時間の規定は全面的に適用される。"], answer: 2, explanation: "特例措置対象事業場の週法定労働時間は「44時間」です。坑内労働は「坑口から坑口まで」が労働時間とみなされます。" },
+    { category: "労働基準法", text: "36協定（時間外・休日労働に関する協定）に関する記述として、誤っているものはどれか。", options: ["時間外労働を行わせるためには、過半数代表者と書面による協定を結び、所轄労働基準監督署長に届け出なければならない。", "36協定を締結すれば、満18歳未満の者にも時間外労働をさせることができる。", "36協定の指針における時間外労働の限度時間は、原則として月45時間、年360時間である。", "特別条項付きの36協定であっても、時間外労働と休日労働の合計は月100時間未満でなければならない。"], answer: 1, explanation: "満18歳未満の年少者には、原則として時間外労働（残業）や休日労働をさせることはできません（36協定があっても不可）。" },
+    { category: "労働基準法", text: "休憩時間に関する記述として、法令上正しいものはどれか。", options: ["労働時間が6時間を超える場合は少なくとも45分、8時間を超える場合は少なくとも1時間の休憩を与えなければならない。", "休憩時間は、業務の合間に分割して与えてはならない。", "休憩時間は、必ず労働時間の終了後に与えなければならない。", "一斉付与の原則の例外（運輸業や商業など）を適用する場合でも、個別の労使協定が必要である。"], answer: 0, explanation: "休憩は労働時間の「途中」に与える必要があります。6時間超で45分、8時間超で1時間が最低ラインです。" },
+    { category: "労働基準法", text: "割増賃金に関する記述として、正しい割増率の組み合わせはどれか。", options: ["時間外労働：2割5分以上 ／ 休日労働：3割5分以上 ／ 深夜労働：2割5分以上", "時間外労働：2割5分以上 ／ 休日労働：2割5分以上 ／ 深夜労働：2割5分以上", "時間外労働：2割5分以上 ／ 休日労働：3割5分以上 ／ 深夜労働：3割5分以上", "時間外労働：3割5分以上 ／ 休日労働：3割5分以上 ／ 深夜労働：2割5分以上"], answer: 0, explanation: "基本となる法定の割増率は、時間外（25%以上）、深夜（25%以上）、休日（35%以上）です。" },
+    { category: "労働基準法", text: "フレックスタイム制を採用するための要件として、法令上規定されていないものはどれか。", options: ["就業規則等により、始業及び終業の時刻を労働者の決定に委ねる旨を定めること。", "労使協定により、対象となる労働者の範囲を定めること。", "労使協定により、清算期間（3ヶ月以内）を定めること。", "対象労働者全員の個別の同意を得ること。"], answer: 3, explanation: "フレックスタイム制の導入に、個々の労働者の同意は要件とされていません（就業規則と労使協定で導入可能）。" },
+    { category: "労働基準法", text: "満18歳未満の年少者の就業制限業務として、正しいものはどれか。", options: ["ボイラーの取扱業務（小型ボイラーを除く）", "クレーンの運転業務（つり上げ荷重が5トン未満のものを含む）", "最大積載量が2トン以上の貨物自動車の運転業務", "深さが5メートル以上の地穴における土砂崩壊のおそれのある場所での業務"], answer: 3, explanation: "深さ5m以上の地穴などは危険業務として年少者の就業が禁止されています。なお、クレーンは5トン未満なら一部可などの例外がありますが、原則として運転は禁止です（床上操作式などを除く）。選択肢の中で最も明確に全面禁止されているのは4番です。" },
+    { category: "労働基準法", text: "産前産後の休業に関する記述として、誤っているものはどれか。", options: ["使用者は、6週間（多胎妊娠の場合は14週間）以内に出産する予定の女性が休業を請求した場合、就業させてはならない。", "産後8週間を経過しない女性を就業させてはならない。", "産後6週間を経過した女性が請求した場合には、医師が支障がないと認めた業務に就かせることができる。", "産前産後の休業期間中は、給与の全額を支払わなければならない。"], answer: 3, explanation: "産前産後休業中の「給与の支払い」については、労働基準法に規定はありません（無給でも違法ではない）。通常は健康保険から出産手当金が出ます。" },
+    { category: "労働基準法", text: "育児時間に関する記述として、正しいものはどれか。", options: ["生後満1年に達しない生児を育てる女性は、1日2回各々少なくとも30分の育児時間を請求できる。", "育児時間は、必ず始業時または終業時に請求しなければならない。", "育児時間を請求できるのは、正社員に限られる。", "男性労働者も、労働基準法に基づく育児時間を請求できる。"], answer: 0, explanation: "労基法の育児時間は「女性」のみの権利です（育児介護休業法とは別）。1日2回、各30分です。" },
+    { category: "労働基準法", text: "就業規則の作成・届出義務がある事業場の要件はどれか。", options: ["常時5人以上の労働者を使用する事業場", "常時10人以上の労働者を使用する事業場", "常時30人以上の労働者を使用する事業場", "常時50人以上の労働者を使用する事業場"], answer: 1, explanation: "常時10人以上の労働者を使用する使用者は、就業規則を作成し、行政官庁に届け出なければなりません。" },
+    { category: "労働基準法", text: "就業規則の作成または変更の手続きにおいて、使用者が聴かなければならない意見の聴取対象者はどれか。", options: ["労働者の過半数で組織する労働組合がある場合はその労働組合、ない場合は労働者の過半数を代表する者", "労働者の過半数で組織する労働組合がある場合はその労働組合、ない場合は労働者全員", "常に、労働者全員の同意", "選任されている衛生管理者"], answer: 0, explanation: "過半数組合または過半数代表者の「意見」を聴く必要があります（同意までは求められていません）。" },
+    { category: "労働基準法", text: "制裁規定の制限に関する記述として、正しいものはどれか。", options: ["減給の制裁は、1回の額が平均賃金の1日分の半額を超えてはならない。", "減給の制裁の総額は、一賃金支払期における賃金総額の10分の3を超えてはならない。", "出勤停止処分の期間は、法令で上限が7日間と定められている。", "遅刻や早退の時間分を賃金から控除することは、減給の制裁にあたる。"], answer: 0, explanation: "減給の制裁の上限は「1回につき平均賃金の1日分の半額」かつ「総額が一賃金支払期の総額の10分の1」までです。遅刻分のカットは「ノーワーク・ノーペイ」であり制裁ではありません。" },
+    { category: "労働基準法", text: "事業附属寄宿舎において、使用者が行ってはならない行為として、法令上明記されているものはどれか。", options: ["寄宿舎の規則（寄宿舎規則）を作成すること。", "寄宿舎に居住する労働者の私生活の自由を侵すこと。", "寄宿舎の管理者を労働者の中から選任すること。", "男女を同一の棟に収容すること。"], answer: 1, explanation: "労働基準法第94条で「使用者は、事業附属寄宿舎に寄宿する労働者の私生活の自由を侵してはならない」と規定されています。" },
+    { category: "労働基準法", text: "週40時間労働制の例外（特例措置対象事業場）が認められない業種はどれか。", options: ["物品販売業（小売業）", "理容・美容業", "映画の製作の事業", "映画の映写・演劇の興行の事業"], answer: 2, explanation: "特例措置（週44時間）が認められるのは「商業」「映画・演劇業（製作を除く）」「保健衛生業」「接客娯楽業」で、かつ常時10人未満の場合です。「映画の製作」は認められません。" },
+    { category: "労働基準法", text: "労働条件の明示（絶対的明示事項）において、昇給に関する事項はどのように扱われるか。", options: ["書面で明示しなければならない。", "口頭での明示でもよいが、明示自体は必要である。", "就業規則に記載があれば、個別の明示は不要である。", "書面で明示しなければならないが、昇給に関する事項のみは、書面の交付によらずともよい（口頭可等の例外あり）。"], answer: 3, explanation: "法改正により、「昇給に関する事項」は絶対的明示事項ですが、書面の交付までは義務付けられていません（ただし、トラブル防止のため書面が望ましい）。書面交付義務があるのは、契約期間、場所・業務、始業終業・休日休暇、賃金、退職事項です。" },
+    { category: "労働基準法", text: "労働時間の計算において、労働時間に含まれないもの（労働とみなされないもの）はどれか。", options: ["使用者の指揮命令下に置かれている待機時間（手待時間）", "参加が義務付けられている教育訓練の時間", "自由参加の社内研修の時間", "事業場外労働で労働時間の算定が困難な場合の、所定労働時間"], answer: 2, explanation: "自由参加の研修は、業務命令ではないため労働時間には含まれません。" },
+    { category: "労働基準法", text: "非常時（災害等）の時間外労働について、正しい手続きはどれか。", options: ["事後に遅滞なく所轄労働基準監督署長に届け出れば、許可を受ける必要はない。", "事前に所轄労働基準監督署長の許可を受けなければならない（事態が急迫している場合は事後に届出）。", "36協定を締結していれば、手続きは不要である。", "労働者の同意があれば、手続きは不要である。"], answer: 1, explanation: "災害等の非常時は、36協定に関係なく延長できますが、原則「事前の許可」、急迫時は「事後の届出」が必要です。" },
+    { category: "労働基準法", text: "年次有給休暇の時季変更権を行使できる正当な理由として、最も適切なものはどれか。", options: ["慢性的な人手不足で、代替要員が確保できない場合。", "単に業務が多忙である場合。", "請求された時季に休暇を与えると、事業の正常な運営を妨げる場合。", "他の労働者との公平性を保つ必要がある場合。"], answer: 2, explanation: "法的な要件は「事業の正常な運営を妨げる場合」のみです。単なる多忙や慢性的な人手不足は、原則として理由になりません（使用者は代替要員確保の努力義務があるため）。" },
+    { category: "労働基準法", text: "労働基準法における「労働者」の定義として、正しいものはどれか。", options: ["職業の種類を問わず、事業に使用される者で、賃金を支払われる者をいう。", "正社員のみを指し、パートタイム労働者は含まない。", "家事使用人（個人の家庭に雇われる者）も含まれる。", "同居の親族のみを使用する事業における親族も含まれる。"], answer: 0, explanation: "「職業の種類を問わず、事業に使用され、賃金を支払われる者」です。家事使用人や同居の親族のみの事業は除外されます。" },
+    { category: "労働基準法", text: "企画業務型裁量労働制の導入要件に含まれないものはどれか。", options: ["対象業務が、事業の運営に関する事項についての企画、立案、調査及び分析の業務であること。", "労使委員会の決議（委員の5分の4以上の多数）が必要であること。", "対象労働者の同意が必要であること。", "所轄労働基準監督署長の許可が必要であること。"], answer: 3, explanation: "企画業務型裁量労働制は、労使委員会の決議を「届け出る」必要はありますが、監督署長の「許可」までは不要です。" },
+    { category: "労働基準法", text: "１年単位の変形労働時間制を採用する場合の要件として、誤っているものはどれか。", options: ["就業規則への記載のみで導入でき、労使協定の届出は不要である。", "対象期間における労働日数の上限は、原則として年280日である。", "1日の労働時間の限度は10時間、1週間の労働時間の限度は52時間である。", "対象期間を平均して週40時間を超えないように設定する。"], answer: 0, explanation: "1年単位の変形労働時間制の導入には、労使協定の締結と届出が必須です。また、対象期間が3ヶ月を超える場合の労働日数は年280日が限度です。" },
+    { category: "労働基準法", text: "高度プロフェッショナル制度に関する記述として、正しいものはどれか。", options: ["年収が300万円以上の労働者を対象とすることができる。", "対象業務は、研究開発や金融商品のディーリングなど、高度の専門的知識を必要とする業務に限られる。", "導入には、労働者本人の同意は不要である。", "制度適用者には、年間104日以上の休日を確保する義務はない。"], answer: 1, explanation: "年収要件は「1075万円以上」です。本人の同意は必須、休日確保義務（年104日）もあります。" },
+
+    // --- Vol.5 (General Hygiene) ---
+    { category: "労働衛生(一般)", text: "一般健康診断の検査項目において、厚生労働大臣が定める基準に基づき、医師が必要でないと認めるときは省略できる項目として、誤っているものはどれか。", options: ["身長の検査（20歳以上の者）", "腹囲の検査（40歳未満の者など）", "心電図検査（35歳未満の者など）", "聴力の検査（35歳および40歳の者）"], answer: 3, explanation: "「35歳」と「40歳」の節目年齢では、聴力検査（1000Hzおよび4000Hz）を省略することはできません。必ず実施する必要があります。" },
+    { category: "労働衛生(一般)", text: "雇入時の健康診断に関する記述として、誤っているものはどれか。", options: ["常時使用する労働者を雇い入れる際は、原則として健康診断を行わなければならない。", "雇入時の健康診断の項目は、定期健康診断の項目と完全に同一である。", "3ヶ月以内に医師による健康診断を受けており、その結果を証明する書面を提出した場合は、その項目を省略できる。", "雇入時の健康診断では、色覚検査は必須項目ではない。"], answer: 1, explanation: "雇入時の健診項目と定期健診項目は微妙に異なります（例：雇入時には「喀痰検査」や「肝機能の一部」等の省略規定がない、など）。また、雇入時健診は「省略」できる項目が原則としてありません（医師が不要と認めても省略不可）。" },
+    { category: "労働衛生(一般)", text: "深夜業に従事する労働者の健康診断（特定業務従事者の健康診断）について、正しい実施時期はどれか。", options: ["1年以内ごとに1回", "6ヶ月以内ごとに1回", "3ヶ月以内ごとに1回", "配置転換時のみ"], answer: 1, explanation: "深夜業などの特定業務に従事する労働者に対しては、「6ヶ月以内ごとに1回」定期的に健康診断を行わなければなりません。" },
+    { category: "労働衛生(一般)", text: "ストレスチェック制度（心理的な負担の程度を把握するための検査）に関する記述として、誤っているものはどれか。", options: ["常時50人以上の労働者を使用する事業場において、実施義務がある。", "実施頻度は、1年以内ごとに1回である。", "労働者が検査を受ける義務はない（受検義務はない）。", "検査結果は、本人の同意がなくても、事業者が閲覧し人事評価に活用できる。"], answer: 3, explanation: "ストレスチェックの結果は、本人の同意なく事業者に提供（通知）してはなりません。また、人事評価への悪用は厳禁です。" },
+    { category: "労働衛生(一般)", text: "高ストレス者として選定された労働者への対応として、法令上正しいものはどれか。", options: ["事業者は、高ストレス者全員に対して、強制的に医師による面接指導を受けさせなければならない。", "事業者は、本人から申し出があった場合に限り、医師による面接指導を実施しなければならない。", "面接指導の結果に関わらず、就業上の措置（残業制限など）を講じる必要はない。", "面接指導の費用は、労働者本人が負担しなければならない。"], answer: 1, explanation: "医師による面接指導は、高ストレス者からの「申し出」があった場合に実施義務が生じます（強制ではありません）。費用は事業者が負担すべきものです。" },
+    { category: "労働衛生(一般)", text: "メンタルヘルスケアの「４つのケア」に含まれないものはどれか。", options: ["セルフケア", "ラインによるケア", "事業場内産業保健スタッフ等によるケア", "行政機関による強制的なケア"], answer: 3, explanation: "4つのケアは「セルフケア」「ラインによるケア」「事業場内産業保健スタッフ等によるケア」「事業場外資源によるケア」です。" },
+    { category: "労働衛生(一般)", text: "事務所の空気環境の調整に関する基準として、法令上誤っている数値はどれか。", options: ["浮遊粉じん量：0.15 mg/m3 以下", "一酸化炭素（CO）：50 ppm 以下", "二酸化炭素（CO2）：5000 ppm 以下", "ホルムアルデヒド：0.1 mg/m3 以下"], answer: 2, explanation: "二酸化炭素（CO2）の基準は「1000 ppm (0.1%) 以下」です。5000ppmは労働安全衛生法上の許容濃度等の数値であり、事務所則の基準ではありません。" },
+    { category: "労働衛生(一般)", text: "気積（労働者１人あたりの空間の体積）について、事務所衛生基準規則で定められている最低基準はどれか。（設備等を除く）", options: ["5 m3 以上", "10 m3 以上", "15 m3 以上", "20 m3 以上"], answer: 1, explanation: "労働者1人について「10立方メートル以上」としなければなりません（床面から4mを超える高さの空間は計算に入れない）。" },
+    { category: "労働衛生(一般)", text: "事務所の照度基準として、正しい組み合わせはどれか。", options: ["精密な作業：300ルクス以上 ／ 普通の作業：150ルクス以上 ／ 粗な作業：70ルクス以上", "精密な作業：500ルクス以上 ／ 普通の作業：300ルクス以上 ／ 粗な作業：150ルクス以上", "精密な作業：750ルクス以上 ／ 普通の作業：500ルクス以上 ／ 粗な作業：200ルクス以上", "精密な作業：150ルクス以上 ／ 普通の作業：70ルクス以上 ／ 粗な作業：30ルクス以上"], answer: 0, explanation: "「300 - 150 - 70」ルクスが法令上の最低基準です。（JIS基準とは異なりますので注意）" },
+    { category: "労働衛生(一般)", text: "室内の気温と湿度の調整について、法令上努力義務とされている基準はどれか。", options: ["室温10℃以上、相対湿度30%以上", "室温17℃以上28℃以下、相対湿度40%以上70%以下", "室温20℃以上25℃以下、相対湿度50%以上60%以下", "室温25℃以下、相対湿度80%以下"], answer: 1, explanation: "空気調和設備を設けている場合、「室温17～28℃、湿度40～70%」になるように努めなければなりません。" },
+    { category: "労働衛生(一般)", text: "止血法に関する記述として、一般的に推奨される方法はどれか。", options: ["傷口より心臓に近い部分をひも等で強く縛る（止血帯法）。", "傷口（出血部位）をガーゼやハンカチの上から直接強く圧迫する（直接圧迫止血法）。", "傷口を心臓より低い位置に下げる。", "傷口に泥を塗ってふさぐ。"], answer: 1, explanation: "現在は、感染症防止の手袋等をした上で、出血部位を直接圧迫する「直接圧迫止血法」が基本です。止血帯法は組織壊死のリスクがあるため、最終手段です。" },
+    { category: "労働衛生(一般)", text: "熱傷（やけど）の応急手当として、最も優先すべきことはどれか。", options: ["水疱（水ぶくれ）を破って中の液を出す。", "油や軟膏をすぐに塗る。", "すぐに水道水などの流水で十分に冷やす。", "衣類を無理に脱がせてから冷やす。"], answer: 2, explanation: "まずは「流水で冷やす」ことが最優先です。衣類は無理に脱がず、衣類の上から冷やします。水疱は破ってはいけません。" },
+    { category: "労働衛生(一般)", text: "骨折の応急手当に関する記述として、正しいものはどれか。", options: ["変形している場合は、元の形に戻してから固定する。", "骨折部位を確認するため、患部を動かして調べる。", "副子（添え木）は、骨折した部位の上下の関節を含めて固定できる長さのものを使用する。", "開放骨折（骨が皮膚から飛び出している）の場合、骨を体内に押し戻す。"], answer: 2, explanation: "骨折部位の上下の関節まで固定するのが鉄則です。無理に動かしたり、整復（元の形に戻す）しようとしてはいけません。" },
+    { category: "労働衛生(一般)", text: "食中毒の原因物質と主な感染源の組み合わせとして、誤っているものはどれか。", options: ["ノロウイルス ―― 牡蠣（カキ）などの二枚貝", "カンピロバクター ―― 鶏肉、牛レバーなど", "アニサキス ―― サバ、イカなどの魚介類（刺身）", "腸管出血性大腸菌（O157） ―― おにぎり等のデンプン質"], answer: 3, explanation: "おにぎり等で発生しやすいのは「黄色ブドウ球菌」（手指の傷から汚染）や「セレウス菌」です。O157は牛の腸管等に由来し、生肉や汚染された野菜、水などが原因になります。" },
+    { category: "労働衛生(一般)", text: "ノロウイルスに関する記述として、正しいものはどれか。", options: ["湿度の高い梅雨時から夏場にかけて流行する。", "アルコール消毒が極めて有効である。", "感染力が非常に強く、少量のウイルスでも発症する。", "加熱調理してもウイルスは死滅しない。"], answer: 2, explanation: "ノロウイルスは冬場に流行します。アルコールは効きにくく、次亜塩素酸ナトリウムが有効です。85℃以上で90秒以上の加熱で死滅しますが、感染力は非常に強いです。" },
+    { category: "労働衛生(一般)", text: "フグ毒（テトロドトキシン）に関する記述として、正しいものはどれか。", options: ["加熱すれば毒素は分解され、無毒化する。", "消化器系の中毒症状が主で、神経症状は現れない。", "呼吸筋麻痺により死亡することがある。", "予防のための抗毒素血清（特効薬）がある。"], answer: 2, explanation: "テトロドトキシンは耐熱性があり、加熱しても消えません。神経毒であり、呼吸麻痺を引き起こします。特効薬はありません。" },
+    { category: "労働衛生(一般)", text: "労働災害や業務上疾病の統計に関する記述として、近年の傾向として正しいものはどれか。", options: ["業務上疾病の中で最も発生件数が多いのは、有機溶剤中毒である。", "業務上疾病の中で最も発生件数が多いのは、負傷に起因する疾病（腰痛など）である。", "定期健康診断における有病率（何らかの異常所見がある者の割合）は、10%以下である。", "労働災害による死亡者数は、年間5,000人を超えている。"], answer: 1, explanation: "業務上疾病の6割以上は「腰痛」などの負傷起因です。健診の有所見率は5割を超えています。死亡者数は近年1,000人を下回っています（700-800人程度）。" },
+    { category: "労働衛生(一般)", text: "「ＷＨＯ（世界保健機関）」による健康の定義として、正しい記述はどれか。", options: ["健康とは、単に病気や虚弱でないということである。", "健康とは、肉体的にも、精神的にも、そして社会的にも、すべてが満たされた状態にあることをいう。", "健康とは、労働能力が完全に維持されている状態をいう。", "健康とは、平均寿命まで生存できる状態をいう。"], answer: 1, explanation: "有名なWHO憲章の定義です。「Health is a state of complete physical, mental and social well-being and not merely the absence of disease or infirmity.」" },
+    { category: "労働衛生(一般)", text: "熱中症の分類において、最も重症度が高い（III度）症状はどれか。", options: ["めまい、立ちくらみ、こむら返り（熱けいれん）", "頭痛、吐き気、倦怠感（熱疲労）", "意識障害、けいれん、高体温（熱射病）", "大量の発汗"], answer: 2, explanation: "意識障害や高体温（手で触って熱い）がある場合はIII度（重症）であり、直ちに救急搬送が必要です。" },
+    { category: "労働衛生(一般)", text: "トイレの設置基準（事業場）として、正しい記述はどれか。", options: ["男性用と女性用を区別せずに設置してよい。", "男性用大便所は、同時に就業する男性労働者60人以内ごとに1個以上とする。", "女性用便所は、同時に就業する女性労働者20人以内ごとに1個以上とする。", "便所の数は、労働者数の合計のみで算定する。"], answer: 2, explanation: "男性用大便所は60人に1個、小便所は30人に1個。女性用は20人に1個です。男女別が原則です。" },
+    { category: "労働衛生(一般)", text: "BMI（ボディマス指数）の計算式として、正しいものはどれか。", options: ["体重(kg) ÷ 身長(m)", "体重(kg) ÷ {身長(m) × 身長(m)}", "{身長(m) × 身長(m)} ÷ 体重(kg)", "体重(kg) － {身長(cm) － 100}"], answer: 1, explanation: "BMI = 体重(kg) / 身長(m)^2 です。22が標準、25以上が肥満とされます。" },
+    { category: "労働衛生(一般)", text: "受動喫煙防止対策として、健康増進法等の改正により義務付けられた事項として正しいものはどれか。", options: ["すべての事務所は、敷地内を完全禁煙にしなければならない。", "多数の者が利用する施設（事務所含む）は、原則屋内禁煙である。", "喫煙専用室を設置する場合、その出入口における風速は問わない。", "20歳未満の者であっても、従業員であれば喫煙エリアに立ち入らせることができる。"], answer: 1, explanation: "原則屋内禁煙です。喫煙専用室の設置は可能ですが、技術的基準（風速0.2m/s以上など）を満たす必要があります。また、20歳未満は喫煙エリア立入禁止です（業務であっても不可）。" },
+    { category: "労働衛生(一般)", text: "休憩設備に関する記述として、法令上定められているものはどれか。", options: ["事業者は、労働者が有効に利用できる休憩の設備を設けるように努めなければならない。", "常時50人以上の事業場では、休養室を設置する義務がある。", "休憩室は、男女別に設置しなければならない。", "夜間に睡眠を与える必要がある場合でも、男女共用でよい。"], answer: 0, explanation: "休憩設備は「努力義務」です。ただし、夜間に睡眠を与える必要がある場合（仮眠室）や、常時50人以上の女性/常時30人以上の病弱者がいる場合の休養室は「設置義務」があり、かつ男女別でなければなりません。" },
+    { category: "労働衛生(一般)", text: "職場の清掃等（清潔）に関する記述として、法令上定められている頻度はどれか。", options: ["日常行う清掃のほか、1年以内ごとに1回、大掃除を行う。", "日常行う清掃のほか、6ヶ月以内ごとに1回、大掃除を行う。", "日常行う清掃のほか、1ヶ月以内ごとに1回、大掃除を行う。", "特に期間の定めはない。"], answer: 1, explanation: "「日常行う清掃のほか、6月以内ごとに1回、定期に、統一的に大掃除を行わなければならない」と定められています。" },
+    { category: "労働衛生(一般)", text: "ネズミ、昆虫等の防除に関する記述として、正しいものはどれか。", options: ["事業場の建物等のネズミ、昆虫等の発生状況を、1年以内ごとに1回、統一的に調査しなければならない。", "調査の結果、発生が認められた場合でも、実害がなければ措置は不要である。", "6ヶ月以内ごとに1回、定期に、統一的に調査を行う。", "殺虫剤の散布は、予防のために毎月必ず行わなければならない。"], answer: 2, explanation: "ネズミ・昆虫等の調査は「6ヶ月以内ごとに1回」です。その結果に基づき、必要な措置を講じます。" },
+
+    // --- Vol.6 (Physiology & Sense) ---
+    { category: "労働生理", text: "自律神経系に関する記述として、誤っているものはどれか。", options: ["自律神経系は、呼吸、循環、消化などの不随意な機能を調節する。", "交感神経は、身体を活動的な状態にするように作用する。", "副交感神経は、心拍数を増加させ、血圧を上昇させる。", "自律神経の中枢は、脳の間脳（視床下部）にある。"], answer: 2, explanation: "心拍数増加や血圧上昇は「交感神経」の働きです。副交感神経は逆に、心拍数を減少させ、身体を休息・修復状態にします。" },
+    { category: "労働生理", text: "中枢神経系に関する記述として、正しい組み合わせはどれか。", options: ["大脳 ―― 運動、感覚、思考、記憶などの高次機能を司る。", "小脳 ―― 呼吸や循環の生命維持中枢である。", "脳幹（延髄） ―― 身体の平衡を保つ調節中枢である。", "脊髄 ―― 視覚や聴覚の感覚情報を直接処理する。"], answer: 0, explanation: "小脳は「身体の平衡」、延髄は「呼吸・循環（生命維持）」を司ります。" },
+    { category: "労働生理", text: "眼の調節機能に関する記述として、誤っているものはどれか。", options: ["近くのものを見るときは、毛様体筋が収縮し、水晶体が厚くなる。", "遠くのものを見るときは、毛様体筋が弛緩し、水晶体が薄くなる。", "加齢により水晶体の弾力性が失われると、近点距離（ピントが合う最短距離）が短くなる。", "夜盲症（鳥目）は、ビタミンAの不足により、暗所での視力が著しく低下する疾病である。"], answer: 2, explanation: "老化（老眼）が進むと、水晶体の調節力が落ちるため、近点距離は「長く」なります（遠くに離さないと見えなくなる）。" },
+    { category: "労働生理", text: "聴覚および平衡感覚に関する記述として、正しいものはどれか。", options: ["内耳にある蝸牛は、音の振動を電気信号に変換する。", "中耳にある耳小骨は、音の振動を減衰させて内耳に伝える。", "耳管は、通常は開いており、鼓膜の内外の圧力を一定に保っている。", "三半規管は、音の強弱を感知する器官である。"], answer: 0, explanation: "耳小骨は音を「増幅」させます。耳管は通常「閉じて」います。三半規管は「体の回転（平衡感覚）」を感知します。" },
+    { category: "労働生理", text: "心臓の働きと血圧に関する記述として、誤っているものはどれか。", options: ["最高血圧（収縮期血圧）は、心臓の左心室が収縮して血液を押し出した時の血圧である。", "最低血圧（拡張期血圧）は、心臓が拡張して血液を吸い込んでいる時の血圧である。", "血圧は、一般に食事中や入浴中に大きく低下する。", "心拍数は、一般に加齢とともに減少する傾向がある。"], answer: 2, explanation: "食事や入浴、運動、精神的興奮などによって血圧は「上昇」します。" },
+    { category: "労働生理", text: "血液の成分と働きに関する記述として、正しいものはどれか。", options: ["赤血球の寿命は約120日で、古くなったものは主に肝臓や脾臓で破壊される。", "白血球の数は、健康な成人で1mm3あたり約500万個である。", "血小板は、酸素を運搬する働きがある。", "血漿に含まれる成分の約50%はタンパク質である。"], answer: 0, explanation: "白血球数は4,000～9,000個程度です（500万個は赤血球）。血小板は「止血」、血漿の約90%は「水分」です。" },
+    { category: "労働生理", text: "消化・吸収に関する記述として、正しいものはどれか。", options: ["唾液に含まれるアミラーゼは、タンパク質を分解する酵素である。", "胃液に含まれるペプシンは、デンプンを分解する酵素である。", "胆汁は、脂肪を乳化して消化を助ける働きがあり、肝臓で作られる。", "小腸で吸収された栄養分は、すべてリンパ管を通って心臓へ送られる。"], answer: 2, explanation: "アミラーゼは「デンプン」、ペプシンは「タンパク質」を分解します。吸収された栄養の多くは「門脈」を通って「肝臓」へ運ばれます。" },
+    { category: "労働生理", text: "肝臓の機能に関する記述として、誤っているものはどれか。", options: ["血液中のブドウ糖をグリコーゲンに変えて貯蔵する。", "体内の有害な物質（アルコール、アンモニア等）を解毒する。", "血液凝固因子（プロトロンビン等）を合成する。", "インスリンなどのホルモンを直接分泌する。"], answer: 3, explanation: "インスリンを分泌するのは「すい臓（ランゲルハンス島）」です。肝臓はホルモンを分泌する器官ではありません。" },
+    { category: "労働生理", text: "腎臓の機能に関する記述として、正しいものはどれか。", options: ["ネフロン（腎単位）は、腎小体と尿細管から構成される。", "原尿の約50%が尿細管で再吸収され、残りが尿として排出される。", "尿の成分の大部分はタンパク質と糖である。", "健康な人の尿には、通常、赤血球が大量に含まれる。"], answer: 0, explanation: "原尿の「約99%」が再吸収されます。健康な人の尿にタンパク質、糖、赤血球は通常含まれません。" },
+    { category: "労働生理", text: "ホルモンとその分泌部位の組み合わせとして、誤っているものはどれか。", options: ["成長ホルモン ―― 下垂体前葉", "アドレナリン ―― 副腎髄質", "グルカゴン ―― すい臓", "甲状腺ホルモン ―― 副腎皮質"], answer: 3, explanation: "甲状腺ホルモンは「甲状腺」から分泌されます。副腎皮質からは「コルチゾール（副腎皮質ホルモン）」などが分泌されます。" },
+    { category: "労働生理", text: "筋肉のエネルギー代謝に関する記述として、誤っているものはどれか。", options: ["筋肉を動かす直接のエネルギー源は、ATP（アデノシン三リン酸）である。", "無酸素運動では、グリコーゲンが分解されて乳酸が生成される。", "有酸素運動では、酸素を利用して糖や脂肪を完全に分解し、効率よくエネルギーを取り出す。", "乳酸は、筋肉に蓄積されるとエネルギー効率を高める働きがある。"], answer: 3, explanation: "乳酸は「疲労物質」としての側面があり、蓄積すると筋肉の収縮を阻害し、疲労感の原因になります。" },
+    { category: "労働生理", text: "睡眠に関する記述として、正しいものはどれか。", options: ["ノンレム睡眠は、眠りが浅く、眼球が素早く動く睡眠である。", "レム睡眠のとき、骨格筋の緊張は著しく低下するが、脳は活発に働いている。", "一晩の睡眠中、レム睡眠とノンレム睡眠は約30分周期で繰り返される。", "健康な成人では、入眠直後にまずレム睡眠が現れる。"], answer: 1, explanation: "レム（REM）睡眠は「体は寝ているが脳は起きている」状態で、夢を見やすく、筋肉が緩みます。周期は約90分、入眠直後は「ノンレム睡眠」から始まります。" },
+    { category: "労働生理", text: "体温調節に関する記述として、正しいものはどれか。", options: ["体温調節の中枢は、延髄にある。", "暑いときは、皮膚の血管が収縮して放熱を促進する。", "寒いときは、立毛筋が収縮し、ふるえ（戦慄）によって産熱を増加させる。", "発汗による体温調節は、熱の「放射」を利用したものである。"], answer: 2, explanation: "体温中枢は「間脳（視床下部）」です。暑いときは血管が「拡張」します。発汗は「蒸発（気化熱）」を利用した放熱です。" },
+    { category: "労働生理", text: "疲労の測定方法に関する組み合わせとして、誤っているものはどれか。", options: ["フリッカーテスト ―― 中枢神経（精神）疲労の測定", "ドナジオ反応 ―― 尿中のタンパク質変性による疲労の測定", "握力測定 ―― 筋力の低下による肉体疲労の測定", "呼気中の二酸化炭素濃度 ―― 視機能疲労の測定"], answer: 3, explanation: "呼気分析は全身のエネルギー代謝や肉体労働強度の測定に用いられます。視機能疲労は「近点距離」の測定などが一般的です。" },
+    { category: "労働生理", text: "恒常性（ホメオスタシス）に関する記述として、正しいものはどれか。", options: ["外部環境が変化しても、体温や血糖値などの体内環境を一定に保とうとする仕組みをいう。", "運動によって心拍数が上昇することをいう。", "加齢によって身体機能が低下することをいう。", "特定の有害物質に繰り返し曝露されることで、耐性がつくことをいう。"], answer: 0, explanation: "ホメオスタシスは、生命維持のために体内環境を安定させる機能のことです。" },
+    { category: "労働生理", text: "感覚受容器とその適当刺激の組み合わせとして、正しいものはどれか。", options: ["網膜（視細胞） ―― 化学物質", "耳（蝸牛） ―― 空気の振動（音）", "皮膚（温覚点） ―― 圧力", "舌（味蕾） ―― 電磁波"], answer: 1, explanation: "網膜は「光（電磁波）」、温覚点は「熱」、舌は「化学物質（味物質）」が適当刺激です。" },
+    { category: "労働生理", text: "血液の循環路において、二酸化炭素を最も多く含む血液（静脈血）が流れているのはどこか。", options: ["左心房", "左心室", "肺静脈", "肺動脈"], answer: 3, explanation: "肺動脈は、全身から戻ってきた二酸化炭素の多い血液を肺へ送るための血管なので、静脈血が流れています（名称は動脈ですが中身は静脈血）。" },
+    { category: "労働生理", text: "白血球の種類とその働きについて、誤っているものはどれか。", options: ["好中球 ―― 細菌を貪食する。", "リンパ球 ―― 免疫反応（抗体産生など）に関与する。", "単球 ―― 組織内に入ってマクロファージ（大食細胞）となる。", "血小板 ―― ウイルスを攻撃して破壊する。"], answer: 3, explanation: "血小板は「血液凝固」の主役であり、ウイルス攻撃は白血球（主にリンパ球など）の役割です。" },
+    { category: "労働生理", text: "糖代謝において、血糖値を「下げる」働きを持つ唯一のホルモンはどれか。", options: ["アドレナリン", "インスリン", "グルカゴン", "コルチゾール"], answer: 1, explanation: "血糖値を下げるのは「インスリン」のみです。他の3つはすべて血糖値を上げる方向に働きます。" },
+    { category: "労働生理", text: "体外から摂取したタンパク質が、最終的に分解されて吸収される際の形態はどれか。", options: ["ブドウ糖", "アミノ酸", "脂肪酸", "グリコーゲン"], answer: 1, explanation: "タンパク質はアミノ酸、炭水化物はブドウ糖（単糖類）、脂質は脂肪酸とグリセリンに分解されます。" },
+    { category: "労働生理", text: "腎臓において、血液が濾過（ろか）されて原尿ができる部位はどこか。", options: ["糸球体", "尿細管", "腎盂", "輸尿管"], answer: 0, explanation: "腎小体の中にある「糸球体」という毛細血管の束で、血液が濾過されます。" },
+    { category: "労働生理", text: "人間の末梢神経系は、その機能によって「体性神経」と「自律神経」に分けられるが、体性神経に含まれるものはどれか。", options: ["交感神経", "副交感神経", "知覚神経（感覚神経）", "ホルモン調節神経"], answer: 2, explanation: "体性神経は、感覚を伝える「知覚神経」と、筋肉を動かす「運動神経」から成ります。"
+    },
+    { category: "労働生理", text: "肺におけるガス交換に関する記述として、正しいものはどれか。", options: ["肺胞内の酸素分圧は、血液中の酸素分圧よりも低い。", "二酸化炭素の交換は、肺胞と毛細血管の間の分圧差による拡散によって行われる。", "吸入された酸素は、血漿中に大量に溶解して運搬される。", "肺胞は、気管支が細かく枝分かれした先端にある筋肉の袋である。"], answer: 1, explanation: "ガス交換は分圧の差を利用した「拡散」で行われます。酸素の大部分は赤血球の「ヘモグロビン」と結合して運ばれます。" },
+    { category: "労働生理", text: "血清中に含まれる成分のうち、血液凝固に関与するタンパク質を除いた残りの成分を何と呼ぶか。", options: ["血漿", "血餅", "リンパ液", "ヘモグロビン"], answer: 0, explanation: "紛らわしいですが、血液から細胞成分を除いた液体が「血漿（けっしょう）」、そこから凝固成分を除いたものが「血清（けっせい）」です。" },
+    { category: "労働生理", text: "成人男子の全血液量は、体重の約何分の1を占めるか。", options: ["1/3", "1/8", "1/13", "1/20"], answer: 2, explanation: "全血液量は、体重の約「13分の1」（約8%）とされています。これも試験に出る定数です。" },
+
+    // --- Vol.7 (Safety Mgmt) ---
+    { category: "関係法令(一般)", text: "総括安全衛生管理者を選任しなければならない事業場として、法令上正しいものはどれか。", options: ["通信業で、常時200人の労働者を使用する事業場", "製造業で、常時300人の労働者を使用する事業場", "運送業で、常時50人の労働者を使用する事業場", "建設業で、常時50人の労働者を使用する事業場"], answer: 1, explanation: "総括安全衛生管理者の選任基準は、林業・鉱業・建設業・運送業・清掃業等は「100人以上」、製造業・電気業・ガス業等は「300人以上」、その他の業種は「1000人以上」です。" },
+    { category: "関係法令(一般)", text: "産業医の選任に関する記述として、誤っているものはどれか。", options: ["常時50人以上の労働者を使用するすべての事業場で選任しなければならない。", "常時1000人以上の労働者を使用する事業場では、専属の産業医を選任しなければならない。", "常時3000人を超える労働者を使用する事業場では、2人以上の産業医を選任しなければならない。", "深夜業を含む業務に常時500人以上の労働者を従事させる場合でも、専属の産業医を選任する必要はない。"], answer: 3, explanation: "深夜業も有害業務に含まれるため、常時500人以上の場合は専属の産業医を選任しなければなりません。" },
+    { category: "関係法令(一般)", text: "衛生管理者の選任数として、常時使用する労働者数が「1500人」の場合の正しい人数はどれか。", options: ["2人以上", "3人以上", "4人以上", "5人以上"], answer: 2, explanation: "衛生管理者の選任数は、201～500人：2人、501～1000人：3人、1001～2000人：4人です。" },
+    { category: "関係法令(一般)", text: "安全管理者の選任が必要な業種（屋外産業・工業的業種）として、正しいものはどれか。", options: ["金融・保険業", "小売業", "旅館業", "電気・ガス・熱供給・水道業"], answer: 3, explanation: "安全管理者は、林業、建設業、製造業、電気ガス業、運送業、清掃業、旅館業（一部）などで選任が必要です。金融や小売、ITなどの「第三次産業（非工業的業種）」では選任義務はありません。" },
+    { category: "関係法令(一般)", text: "安全衛生委員会に関する記述として、誤っているものはどれか。", options: ["委員会は、毎月1回以上開催しなければならない。", "委員会の議事録は、3年間保存しなければならない。", "委員会の開催に当たっては、労働者にその内容を周知させなければならない。", "委員会には、産業医を構成員として含める必要はない。"], answer: 3, explanation: "産業医は、安全衛生委員会の構成員（メンバー）として必須です。" },
+    { category: "関係法令(一般)", text: "雇入れ時の安全衛生教育において、すべての業種で省略できない教育事項はどれか。", options: ["作業開始時の点検に関すること。", "整理、整頓及び清潔の保持に関すること。", "機械、原材料等の危険性又は有害性及びこれらの取扱い方法に関すること。", "作業手順に関すること。"], answer: 1, explanation: "非工業的業種（小売、金融など）では、多くの項目を省略できますが、「整理整頓・清潔」「事故時等の措置」「本人の業務に関すること」などは省略できません。特に整理整頓は全業種必須です。" },
+    { category: "関係法令(一般)", text: "職長等の教育（安衛法第60条）を行わなければならない業種として、含まれないものはどれか。", options: ["建設業", "製造業", "電気業", "清掃業"], answer: 3, explanation: "職長教育が必要なのは「建設業」「製造業（一部除く）」「電気業」「ガス業」「自動車整備業」「機械修理業」の6業種です。運送業や清掃業には義務付けられていません。" },
+    { category: "労働安全(一般)", text: "機械の安全対策における「フールプルーフ（Fool Proof）」の考え方として、正しいものはどれか。", options: ["機械が故障しても、安全側に動作するように設計する（例：停電でブレーキがかかる）。", "人間が間違った操作をしても、危険な状態にならないように設計する（例：カバーが閉まらないと動かない）。", "危険な部分を完全に覆って、人間が触れないようにする（隔離）。", "作業者に徹底的な教育を行い、ヒューマンエラーを防止する。"], answer: 1, explanation: "人間は間違えるもの（Fool）という前提で、ミスしても安全（Proof）な設計をすることを指します。選択肢0は「フェイルセーフ（Fail Safe）」の説明です。" },
+    { category: "労働安全(一般)", text: "ボイラーの定期自主検査の頻度として、法令上正しいものはどれか。", options: ["1ヶ月以内ごとに1回", "3ヶ月以内ごとに1回", "6ヶ月以内ごとに1回", "1年以内ごとに1回"], answer: 0, explanation: "ボイラーは非常に危険度が高いため、「1ヶ月以内ごとに1回」の定期自主検査が必要です。（性能検査は1年ごと）" },
+    { category: "労働安全(一般)", text: "クレーンの運転業務において、つり上げ荷重が5トン以上のクレーンを運転できる資格はどれか。", options: ["クレーン・デリック運転士免許", "クレーン運転技能講習修了", "クレーン運転特別教育修了", "玉掛け技能講習修了"], answer: 0, explanation: "5トン以上のクレーン運転は「免許」が必要です（床上操作式限定などを除く）。5トン未満は「技能講習」、5トン未満の一部や跨線テルハなどは「特別教育」です。" },
+    { category: "労働安全(一般)", text: "プレス機械の安全装置として、身体の一部が危険限界に入ると、スライドが急停止する仕組みのものはどれか。", options: ["両手操作式安全装置", "光線式安全装置", "ガード式安全装置", "手引き式安全装置"], answer: 1, explanation: "光線式は、光を遮ると機械が止まる仕組みです。両手操作式は、両手がボタンにないと動かない（手が離れると止まる）仕組みです。" },
+    { category: "労働安全(一般)", text: "研削といし（グラインダー）の取替え・試運転に関する記述として、正しいものはどれか。", options: ["取替え作業には、特別な資格は不要である。", "取替え後の試運転は、作業開始前に1分間以上行う。", "その日の作業開始前の試運転は、3分間以上行う。", "取替え時の試運転は、3分間以上行う。"], answer: 3, explanation: "研削といしの取替え等は「特別教育」が必要です。試運転は、作業開始前＝1分以上、取替え時＝3分以上です。" },
+    { category: "労働安全(一般)", text: "リスクアセスメント（危険性又は有害性等の調査）の実施時期として、指針に示されていないものはどれか。", options: ["建設物を設置し、移転し、変更し、又は解体するとき。", "新規に原材料を採用し、又は変更するとき。", "労働災害が発生し、又は発生するおそれがあるとき。", "定期的に（毎年1回など）必ず実施するとき。"], answer: 3, explanation: "リスクアセスメントは「変化があった時」や「災害発生時」に行うものであり、変化がないのに定期的に行う義務までは指針で示されていません（自主的に行うのは良いことですが）。" },
+    { category: "労働安全(一般)", text: "リスク低減措置の優先順位として、最も優先すべきものはどれか。", options: ["管理的対策（マニュアル整備、教育訓練など）", "工学的対策（ガード、インターロックの設置など）", "個人的対策（保護具の使用など）", "本質的対策（危険な作業の廃止、有害物質の変更など）"], answer: 3, explanation: "最も効果が高い「本質的対策（危険そのものをなくす）」が最優先です。次に工学的、管理的、最後が保護具です。" },
+    { category: "労働安全(一般)", text: "「４Ｓ」活動に含まれないものはどれか。", options: ["整理（Seiri）", "整頓（Seiton）", "清掃（Seiso）", "洗浄（Senjo）"], answer: 3, explanation: "4Sは「整理・整頓・清掃・清潔（Seiketsu）」です。洗浄ではありません。" },
+    { category: "労働衛生(一般)", text: "労働災害による死傷者数（休業4日以上）の事故の型として、近年最も多いものはどれか。", options: ["墜落・転落", "転倒", "はさまれ・巻き込まれ", "交通事故"], answer: 1, explanation: "近年、高齢化の影響もあり「転倒」災害が最も多くなっています。死亡災害の原因としては「墜落・転落」が最多です。" },
+    { category: "労働衛生(一般)", text: "健康診断の結果、異常の所見があると診断された労働者に対し、医師からの意見聴取を行わなければならない期間はどれか。", options: ["健康診断実施日から3ヶ月以内", "健康診断の結果を知った日から3ヶ月以内", "健康診断実施日から1ヶ月以内", "健康診断の結果の通知を受けた日から遅滞なく"], answer: 0, explanation: "「健康診断実施日から3ヶ月以内」に医師の意見を聴かなければなりません。" },
+    { category: "労働衛生(一般)", text: "長時間労働者に対する面接指導の要件として、正しいものはどれか。", options: ["週40時間を超える労働が月80時間を超え、かつ疲労の蓄積が認められる者。", "週40時間を超える労働が月100時間を超え、かつ疲労の蓄積が認められる者。", "週40時間を超える労働が月45時間を超えたすべての者。", "管理監督者を除くすべての労働者。"], answer: 0, explanation: "法改正により「月80時間超」かつ「疲労蓄積」かつ「申出あり」が要件となりました（研究開発業務などは申出不要等の特例あり）。" },
+    { category: "労働衛生(一般)", text: "常時50人以上の労働者を使用する事業者が、労働基準監督署長に報告しなければならない報告書はどれか。", options: ["定期健康診断結果報告書", "ストレスチェック制度実施状況報告書", "総括安全衛生管理者選任報告書", "これらすべて"], answer: 3, explanation: "50人以上になった場合、産業医や管理者の選任報告、定期健診結果報告、ストレスチェック報告のすべてが必要です。" },
+    { category: "労働安全(一般)", text: "事業場における安全衛生水準の向上を図るため、事業者が講ずべき措置として、PDCAサイクルを回して継続的に改善を行うシステムを何というか。", options: ["労働安全衛生マネジメントシステム（OSHMS）", "リスクアセスメント", "危険予知活動（KYT）", "ゼロ災運動"], answer: 0, explanation: "OSHMS（Occupational Safety and Health Management System）の説明です。" },
+    { category: "関係法令(一般)", text: "第二種衛生管理者免許を持つ者が、衛生管理者として選任できる業種はどれか。", options: ["建設業", "運送業", "医療業", "情報通信業"], answer: 3, explanation: "第二種免許で選任できるのは「有害業務が少ない業種」です。情報通信、金融、小売などが該当します。建設、運送、医療、製造などは「第一種」が必要です。" },
+    { category: "関係法令(一般)", text: "衛生工学衛生管理者の免許を有する者を選任しなければならない有害業務はどれか。", options: ["著しく暑熱な場所における業務", "多量の低温物体を取り扱う業務", "ラジウム放射線等にさらされる業務", "鉛業務"], answer: 0, explanation: "衛生工学衛生管理者の選任が必要（厳密には、選任すれば特例が適用される、あるいは特定の有害業務で推奨される等ですが、試験的には『暑熱・粉じん・有機・特化などの設備対策が必要な業務』に関連します）。特に「暑熱」「有害ガス」等の工学的対策が必要な場では彼らの選任が求められます。" },
+    { category: "労働生理", text: "BMIが22の場合の標準体重は、身長170cmの人でおよそ何kgか。", options: ["58.5kg", "63.6kg", "68.2kg", "72.4kg"], answer: 1, explanation: "計算式：1.7(m) × 1.7(m) × 22 = 63.58kg。約63.6kgです。" },
+    { category: "労働衛生(一般)", text: "出血量が全血液量の何%を超えると、生命に危険が及ぶ（出血性ショック）とされるか。", options: ["10%", "20%", "30%", "50%"], answer: 2, explanation: "全血液量の約30%（成人で約1.5リットル程度）を失うと、生命に危険が及びます。20%でショック症状が出始めます。" },
+    { category: "労働安全(一般)", text: "ハインリッヒの法則において、1件の重大事故の背後には、何件の軽微な事故と、何件のヒヤリハットが存在するとされているか。", options: ["29件の軽微な事故と、300件のヒヤリハット", "10件の軽微な事故と、100件のヒヤリハット", "50件の軽微な事故と、500件のヒヤリハット", "3件の軽微な事故と、30件のヒヤリハット"], answer: 0, explanation: "「1 : 29 : 300」の法則として有名です。" },
+
+    // --- Vol.8 (Advanced) ---
+    { category: "労働衛生(一般)", text: "ある作業場で、1時間の必要換気量を算出したところ、1,200 m3であった。この部屋の定員（労働者数）として、事務所衛生基準規則に適合する最大人数はどれか。ただし、外気の二酸化炭素濃度は0.04%、室内の基準値は0.1%とする。", options: ["10人", "20人", "30人", "40人"], answer: 1, explanation: "計算式：必要換気量 = 呼出CO2量 / (室内基準 - 外気濃度) です。一般に1人あたり30m3/h（または余裕を見てそれ以上）必要とされます。1200 ÷ 60 = 20人と安全側に計算するか、あるいは1200 ÷ 30 = 40人ですが、試験的には余裕を持った『20人』が正解となるケースが多いです（1人あたり60m3確保）。" },
+    { category: "労働生理", text: "エネルギー代謝率（RMR）の算出式として、正しいものはどれか。", options: ["RMR = 労働時の消費エネルギー ÷ 基礎代謝量", "RMR = (労働時の総消費エネルギー － 安静時消費エネルギー) ÷ 基礎代謝量", "RMR = 基礎代謝量 ÷ 労働時間", "RMR = 労働時の心拍数 ÷ 安静時の心拍数"], answer: 1, explanation: "RMRは『その作業のためにどれだけエネルギーを余計に使ったか』を基礎代謝量との比率で表す指標です。安静時のエネルギーは引き算します。" },
+    { category: "労働衛生(有害)", text: "金属熱（金属熱ふ熱）の主な原因となる金属のヒュームはどれか。", options: ["鉛", "水銀", "亜鉛", "クロム"], answer: 2, explanation: "溶融した『亜鉛』などの金属ヒュームを吸入すると、数時間後に悪寒、発熱などのインフルエンザに似た症状（金属熱）が現れます。" },
+    { category: "労働衛生(有害)", text: "化学物質による健康障害において、ベンゼンが主に引き起こす障害はどれか。", options: ["膀胱がん", "造血機能障害（再生不良性貧血、白血病）", "視神経障害（失明）", "肝血管肉腫"], answer: 1, explanation: "ベンゼンは骨髄を侵し、造血機能障害を引き起こします。膀胱がんは芳香族アミン（ベンジジン等）、視神経はメタノール、肝血管肉腫は塩化ビニルです。" },
+    { category: "労働衛生(有害)", text: "一酸化炭素中毒のメカニズムとして、正しい記述はどれか。", options: ["肺胞の表面を凝固させ、酸素の取り込みを阻害する。", "血液中のヘモグロビンと結合し、酸素の運搬能力を低下させる。", "赤血球を破壊（溶血）させる。", "呼吸中枢を直接麻痺させる。"], answer: 1, explanation: "一酸化炭素はヘモグロビンとの親和性が酸素の200〜300倍も強いため、酸素の運搬を邪魔して組織を窒息状態にします。" },
+    { category: "労働基準法", text: "労働基準法上の「管理監督者」について、適用が除外される規定はどれか。", options: ["深夜業の割増賃金に関する規定", "労働時間、休憩、休日に関する規定", "年次有給休暇に関する規定", "産前産後の休業に関する規定"], answer: 1, explanation: "管理監督者は「労働時間・休憩・休日」の規定は適用外ですが、「深夜割増」と「有給休暇」は適用されます。ここは非常に間違いやすいポイントです。" },
+    { category: "労働基準法", text: "1ヶ月単位の変形労働時間制を導入する場合、必ず行わなければならない手続きはどれか。", options: ["所轄労働基準監督署長への届出のみ（就業規則への記載は不要）", "就業規則その他これに準ずるものによる定め、または労使協定の締結", "労働者全員の個別同意", "1年ごとの更新手続き"], answer: 1, explanation: "1ヶ月単位であれば、就業規則に書くだけで導入可能です（労使協定でも可）。1年単位の場合は労使協定が必須となります。" },
+    { category: "労働衛生(一般)", text: "等価騒音レベル(LAeq)に関する記述として、正しいものはどれか。", options: ["騒音の最大値（ピーク値）を表す指標である。", "変動する騒音のエネルギー平均値を、一定時間の定常騒音レベルとして表したものである。", "耳に聞こえない超音波のレベルを表す指標である。", "4000Hzの周波数のみを測定した値である。"], answer: 1, explanation: "変動する騒音を時間平均したもので、現在の騒音評価の主流です。作業環境測定でも用いられます。" },
+    { category: "労働衛生(一般)", text: "事務所において、中央管理方式の空気調和設備を用いて加湿する場合、供給する水として法令上定められているのはどれか。", options: ["工業用水", "蒸留水", "水道法第4条の規定による水質基準に適合する水", "特に指定はない"], answer: 2, explanation: "加湿に使う水は、飲料水と同じ「水道法の水質基準適合水」でなければなりません（レジオネラ菌対策等のため）。" },
+    { category: "労働衛生(一般)", text: "作業環境測定における「A測定」と「B測定」の組み合わせとして、正しいものはどれか。", options: ["A測定：作業時間中の最大濃度を測る ／ B測定：平均濃度を測る", "A測定：単位作業場所の平均的な状態を把握する ／ B測定：発散源の近く（最高濃度付近）を把握する", "A測定：屋外で測る ／ B測定：屋内で測る", "A測定：年1回行う ／ B測定：毎日行う"], answer: 1, explanation: "A測定は空間全体の平均、B測定は最も濃度が高そうな場所（発散源のすぐ近く）をピンポイントで測るものです。" },
+    { category: "労働衛生(一般)", text: "作業環境測定の評価において、管理区分が「第二管理区分」となった場合の措置として、正しいものはどれか。", options: ["直ちに設備を停止し、作業を中止しなければならない。", "施設、設備、作業方法の点検を行い、必要な改善措置を講じるよう努めなければならない。", "特に何もしなくてよい。", "労働者全員に防毒マスクを強制着用させる。"], answer: 1, explanation: "第二管理区分は「改善の余地あり」の状態なので、点検と改善の努力義務が生じます。第三管理区分になると改善が「義務」になります。" },
+    { category: "労働生理", text: "血液のpH（水素イオン指数）として、正常な範囲はどれか。", options: ["pH 6.8 〜 7.0 (弱酸性)", "pH 7.0 〜 7.2 (中性)", "pH 7.35 〜 7.45 (弱アルカリ性)", "pH 7.8 〜 8.0 (アルカリ性)"], answer: 2, explanation: "人間の血液は常に「pH 7.4 前後」の極めて狭い範囲の弱アルカリ性に保たれています。" },
+    { category: "労働生理", text: "基礎代謝量に影響を与える要因として、誤っているものはどれか。", options: ["年齢：高齢になるほど低下する。", "性別：男性の方が女性より高い。", "体表面積：体表面積が大きいほど高い。", "食事：食後すぐに測定するのが最も正確である。"], answer: 3, explanation: "基礎代謝は「早朝空腹時」など、食事の影響を受けていない状態で測定します。食後は代謝が上がるため正確ではありません。" },
+    { category: "関係法令(一般)", text: "衛生管理者の職務として、法令上「毎週1回」行わなければならないと定められているものはどれか。", options: ["安全衛生委員会の開催", "作業場等の巡視", "労働者の健康診断結果の確認", "衛生教育の実施"], answer: 1, explanation: "衛生管理者は「少なくとも毎週1回」作業場を巡視し、設備や作業方法に問題があれば直ちに措置を講じる義務があります。" },
+    { category: "関係法令(一般)", text: "産業医による作業場等の巡視の頻度として、原則として定められているのはどれか。", options: ["毎週1回以上", "毎月1回以上", "3ヶ月に1回以上", "1年に1回以上"], answer: 1, explanation: "産業医の巡視は「少なくとも毎月1回」です。ただし、事業者から特定の情報提供を受けている等の要件を満たせば「2ヶ月に1回」に緩和される特例もありますが、原則は毎月1回です。" },
+    { category: "関係法令(一般)", text: "労働安全衛生法において、労働者の義務として明記されているものはどれか。", options: ["安全衛生計画を作成すること。", "事業者が講ずる労働災害防止のための措置に協力すること。", "他の労働者に安全教育を行うこと。", "作業環境測定を実施すること。"], answer: 1, explanation: "安衛法では労働者にも「事業者の講ずる措置への協力義務」が課せられています。" },
+    { category: "労働衛生(一般)", text: "産業医が行うストレスチェック後の面接指導において、医師が個人情報（検査結果等）を事業者に提供することについて、正しいルールはどれか。", options: ["面接指導を実施した時点で、本人の同意があったものとみなされる。", "面接指導の結果に基づく事後措置に必要な範囲で、本人の同意を得ずに提供できる。", "本人の同意を得なければ、提供してはならない。", "管理監督者からの依頼があれば、本人の同意なく提供できる。"], answer: 0, explanation: "実は「面接指導を申し出たこと」自体が、結果の提供に同意したものとみなされます（そうしないと事業者が就業上の措置を講じられないため）。ただし、不必要な情報の提供は制限されます。" },
+    { category: "労働安全(一般)", text: "手持ち動力工具（チェーンソー等）の振動障害予防において、1日の振動ばく露時間の制限として、ガイドラインで示されている目標値はどれか。", options: ["合計30分以内", "合計2時間以内", "合計4時間以内", "制限はない"], answer: 1, explanation: "振動工具による障害を防ぐため、1日の作業時間は合計「2時間以内」にすることが推奨されています。" },
+    { category: "労働生理", text: "視力に影響を与える「視物質」の主成分であり、欠乏すると暗順応が遅れる栄養素はどれか。", options: ["ビタミンB1", "ビタミンB12", "ビタミンA", "ビタミンC"], answer: 2, explanation: "ビタミンAは網膜の視物質（ロドプシン）の原料です。不足すると夜盲症（暗いところで見えない）になります。" },
+    { category: "労働衛生(有害)", text: "有機溶剤中毒の症状として、初期に現れやすい共通の症状はどれか。", options: ["手足の麻痺", "視力低下", "頭痛、めまい、泥酔感", "呼吸困難"], answer: 2, explanation: "多くの有機溶剤には「中枢神経抑制作用」があるため、お酒に酔ったような状態（泥酔感）や頭痛、めまいが初期症状として共通します。" },
+    { category: "関係法令(一般)", text: "労働安全衛生法上の「事業場」の定義として、正しい考え方はどれか。", options: ["法人単位（会社全体）で一つの事業場とする。", "場所的観念によって決定され、同一場所にあるものは一つの事業場とする。", "作業チームごとに事業場とする。", "売上高によって決定する。"], answer: 1, explanation: "安衛法は「場所（工場、事務所、支店）」単位で適用されます。同じ会社でも、本店と支店は別々の事業場としてカウントします。" },
+    { category: "労働衛生(一般)", text: "傷病者がＡＥＤ（自動体外式除細動器）の適応となる状態は、次のうちどれか。", options: ["心停止（心静止）の状態", "心室細動（心臓が細かく震えている）の状態", "正常に呼吸をしている状態", "意識はあるが胸が痛い状態"], answer: 1, explanation: "AEDは「心臓のけいれん（心室細動）」を電気ショックで取り除く装置です。完全に止まっている（心静止）場合は、まず胸骨圧迫が必要です。" },
+    { category: "労働生理", text: "血液中のブドウ糖濃度（血糖値）を調節するインスリンを分泌する部位はどれか。", options: ["肝臓", "副腎皮質", "すい臓のランゲルハンス島（β細胞）", "下垂体後葉"], answer: 2, explanation: "すい臓のランゲルハンス島です。β細胞からインスリン、α細胞からグルカゴンが分泌されます。" },
+    { category: "労働生理", text: "人間の五感の中で、最も早く疲労（順応）し、回復も早いとされる感覚はどれか。", options: ["視覚", "聴覚", "嗅覚", "触覚"], answer: 2, explanation: "においの感覚（嗅覚）は非常に順応しやすく、同じにおいを嗅ぎ続けるとすぐに感じなくなりますが、離れるとすぐに回復します。" },
+    { category: "関係法令(一般)", text: "労働安全衛生法において、常時50人以上の事業場で、選任した衛生管理者の氏名を遅滞なく報告しなければならない相手は誰か。", options: ["都道府県知事", "厚生労働大臣", "所轄労働基準監督署長", "市町村長"], answer: 2, explanation: "安衛法関係の届出先は、原則として「所轄労働基準監督署長」です。" }
+]);
+</script>
+</body>
 </html>
